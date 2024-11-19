@@ -1,0 +1,31 @@
+{
+    "reports": [
+        {
+            "reportId": "OP6N5BUN",
+            "classroomNo": "101",
+            "date": "2024-11-04",
+            "issueType": "Electrical",
+            "problemDesc": "Lights not working",
+            "status": "In Progress",
+            "user_id": 1004
+        },
+        {
+            "reportId": "BQE429XA",
+            "classroomNo": "102",
+            "date": "2024-11-05",
+            "issueType": "Plumbing",
+            "problemDesc": "Leak in sink",
+            "status": "In Progress",
+            "user_id": 1004
+        },
+        {
+            "reportId": "ZIMDSWIJ",
+            "classroomNo": "103",
+            "date": "2024-11-06",
+            "issueType": "HVAC",
+            "problemDesc": "Air conditioning not working",
+            "status": "In Progress",
+            "user_id": 1004
+        }
+    ]
+}

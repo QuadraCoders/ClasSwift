@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:classwift/models/Classroom.dart';
+import 'package:classwift/models/building.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../models/building.dart';
 
 class ServicesPage extends StatefulWidget {
   final String title;

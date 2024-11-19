@@ -1,161 +1,216 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:classwift/api_service.dart';
+import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:flutter/material.dart';
 
-class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+class DemoPage extends StatefulWidget {
+  const DemoPage({super.key});
 
   @override
-  _ReportIssuePageState createState() => _ReportIssuePageState();
+  _ReportPageState createState() => _ReportPageState();
 }
 
-class _ReportIssuePageState extends State<ReportPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+class _ReportPageState extends State<DemoPage> {
   String? selectedBuilding;
   String? selectedFloor;
   String? selectedClassNo;
   String? selectedIssueType;
-
   final TextEditingController _descriptionController = TextEditingController();
+
   final List<String> floors = [];
   List<String> classNumbers = [];
-  final List<Map<String, dynamic>> classrooms = [];
+  List<Map<String, dynamic>> classrooms = [];
 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadBuildingData();
   }
 
-  Future<void> _loadData() async {
-    const filePath = 'lib/assets/building11.json';
-    final file = File(filePath);
-    final jsonData = json.decode(await file.readAsString());
-    final buildingClassrooms = jsonData['classrooms'] as List<dynamic>;
-
-    classrooms
-        .addAll(buildingClassrooms.map((item) => item as Map<String, dynamic>));
-    floors.addAll(classrooms.map((room) => room['floor'].toString()).toSet());
+  Future<void> _loadBuildingData() async {
+    try {
+      final building = await ApiService().fetchBuildingData();
+      setState(() {
+        classrooms = building.classrooms
+            .map((classroom) => {
+                  'floor': classroom.floor,
+                  'classroomNo': classroom.classroomNo,
+                  'capacity': classroom.capacity,
+                })
+            .toList();
+        floors
+            .addAll(classrooms.map((room) => room['floor'].toString()).toSet());
+      });
+    } catch (e) {
+      print("Error loading building data: $e");
+    }
   }
 
   void _updateClassNumbers(String floor) {
-    classNumbers = classrooms
-        .where((room) => room['floor'].toString() == floor)
-        .map((room) => 'Class ${room['classroomNo']}')
-        .toList();
+    setState(() {
+      classNumbers = classrooms
+          .where((room) => room['floor'].toString() == floor)
+          .map((room) => 'Class ${room['classroomNo']}')
+          .toList();
+    });
   }
 
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final reportData = {
-        "building": selectedBuilding,
-        "floor": selectedFloor,
-        "classroomNo": selectedClassNo,
-        "issueType": selectedIssueType,
-        "problemDesc": _descriptionController.text,
-      };
+  Future<void> _saveReport() async {
+    final reportData = {
+      "reportId": _generateReportId(),
+      "building": selectedBuilding,
+      "floor": selectedFloor,
+      "classroomNo": selectedClassNo,
+      "date": DateTime.now().toIso8601String().split('T').first,
+      "issueType": selectedIssueType,
+      "problemDesc": _descriptionController.text,
+      "status": "Under maintenance",
+      "user_id": 1004
+    };
 
-      // Perform save operation (you can replace this with your actual saving logic)
-      print('Form submitted successfully: $reportData');
+    const filePath = 'lib/assets/reports.json';
+    final file = File(filePath);
 
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: const Text('Success'),
-          content: const Text('Your report has been submitted successfully!'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    } else {
-      // Show a snackbar or error dialog
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill in all required fields.')),
-      );
+    try {
+      List<dynamic> reports = [];
+      if (await file.exists()) {
+        final fileContents = await file.readAsString();
+        final jsonData = json.decode(fileContents);
+        reports = jsonData['reports'] ?? [];
+      }
+
+      reports.add(reportData);
+      final updatedData = json.encode({"reports": reports});
+      await file.writeAsString(updatedData, mode: FileMode.write);
+
+      _showFeedbackDialog(true);
+    } catch (e) {
+      print("Error saving report: $e");
+      _showFeedbackDialog(false);
     }
+  }
+
+  void _showFeedbackDialog(bool isSuccess) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return FeedbackPopup(
+          message: isSuccess
+              ? 'Your report has been submitted successfully!'
+              : 'There was an error submitting your report. Please try again.',
+          isSuccess: isSuccess,
+          onClose: () {
+            Navigator.of(context).pop();
+            if (isSuccess) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(
+                    builder: (context) => const NavigationBarScreen()),
+                (route) => false,
+              );
+            }
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Report an Issue')),
-      body: Form(
-        key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: [
-              _buildDropdown(
-                label: 'Building',
-                value: selectedBuilding,
-                onChanged: (value) {
-                  setState(() => selectedBuilding = value);
-                },
-                items: ['Building 11'],
-                validator: (value) =>
-                    value == null ? 'Please select a building' : null,
-              ),
-              const SizedBox(height: 16),
-              _buildDropdown(
-                label: 'Floor',
-                value: selectedFloor,
-                onChanged: (value) {
-                  setState(() {
-                    selectedFloor = value;
-                    _updateClassNumbers(value!);
-                    selectedClassNo = null;
-                  });
-                },
-                items: floors,
-                validator: (value) =>
-                    value == null ? 'Please select a floor' : null,
-              ),
-              const SizedBox(height: 16),
-              _buildDropdown(
-                label: 'Class Number',
-                value: selectedClassNo,
-                onChanged: (value) {
-                  setState(() => selectedClassNo = value);
-                },
-                items: classNumbers,
-                validator: (value) =>
-                    value == null ? 'Please select a class number' : null,
-              ),
-              const SizedBox(height: 16),
-              _buildDropdown(
-                label: 'Issue Type',
-                value: selectedIssueType,
-                onChanged: (value) {
-                  setState(() => selectedIssueType = value);
-                },
-                items: ['Electrical', 'Plumbing', 'Furniture'],
-                validator: (value) =>
-                    value == null ? 'Please select an issue type' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descriptionController,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                  labelText: 'Problem Description',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please describe the problem' : null,
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _submitForm,
-                child: const Text('Submit'),
-              ),
-            ],
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              'lib/assets/wallpapers (2).png',
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Column(
+              children: [
+                const Center(
+                  child: Text(
+                    'Report Form',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Divider(),
+                const SizedBox(height: 40),
+                _buildDropdown(
+                  label: 'Building',
+                  value: selectedBuilding,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedBuilding = value;
+                    });
+                  },
+                  items: ['Building 11'],
+                ),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  label: 'Floor',
+                  value: selectedFloor,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedFloor = value;
+                      _updateClassNumbers(value!);
+                      selectedClassNo = null;
+                    });
+                  },
+                  items: floors,
+                ),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  label: 'Class Number',
+                  value: selectedClassNo,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedClassNo = value;
+                    });
+                  },
+                  items: classNumbers,
+                ),
+                const SizedBox(height: 16),
+                _buildDropdown(
+                  label: 'Issue Type',
+                  value: selectedIssueType,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedIssueType = value;
+                    });
+                  },
+                  items: ['Electrical', 'Plumbing', 'Furniture'],
+                ),
+                const SizedBox(height: 16),
+                _buildDescriptionField(),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                  onPressed: _saveReport,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 126, 194, 226),
+                  ),
+                  child: const Text(
+                    'Submit',
+                    style: TextStyle(color: Colors.white, fontSize: 20),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -165,19 +220,114 @@ class _ReportIssuePageState extends State<ReportPage> {
     required String? value,
     required ValueChanged<String?> onChanged,
     required List<String> items,
-    String? Function(String?)? validator,
   }) {
-    return DropdownButtonFormField<String>(
-      value: value,
-      decoration: InputDecoration(
-        labelText: label,
-        border: const OutlineInputBorder(),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          width: 150,
+          child: DropdownButtonFormField<String>(
+            value: value,
+            onChanged: onChanged,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12),
+            ),
+            items: items
+                .map((item) => DropdownMenuItem(
+                      value: item,
+                      child: Text(item),
+                    ))
+                .toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDescriptionField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Problem Description',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Icon(Icons.attachment),
+          ],
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: _descriptionController,
+          maxLines: 5,
+          decoration: InputDecoration(
+            hintText: 'Write a brief description of the problem',
+            hintStyle: const TextStyle(color: Colors.grey),
+            border: const OutlineInputBorder(),
+            filled: true,
+            fillColor: Colors.white.withOpacity(0.8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _generateReportId() {
+    final random = DateTime.now().millisecondsSinceEpoch.toString();
+    return "ID$random";
+  }
+}
+
+class FeedbackPopup extends StatelessWidget {
+  final String message;
+  final bool isSuccess;
+  final VoidCallback onClose;
+
+  const FeedbackPopup({
+    required this.message,
+    required this.isSuccess,
+    required this.onClose,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isSuccess ? Icons.check_circle : Icons.error,
+              color: isSuccess ? Colors.green : Colors.red,
+              size: 50,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: onClose,
+              child: const Text('Close'),
+            ),
+          ],
+        ),
       ),
-      onChanged: onChanged,
-      validator: validator,
-      items: items
-          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-          .toList(),
     );
   }
 }
