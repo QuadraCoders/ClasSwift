@@ -1,4 +1,5 @@
 import 'package:classwift/pages/Availability_Page.dart';
+import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/MaintenanceMock.';
 import 'package:classwift/pages/MaintenanceView';
 import 'package:classwift/pages/NavigationBarScreen.dart';
@@ -18,19 +19,11 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        //home: HomePage(),
-        //home: ServicesPage(title: 'Available Classes',),
-        //home: history_page(),
-        //home: NavigationBarScreen(), // we start from here
-        //home: LoginPage(),
-        //home: DemoPage(),
-        //home: ProfilePage()
-        //home: ReportPage()
-        home: WelcomePage()
-        //home:ContactUsPage()
-        //home:MaintenanceView()
-        //home:MaintenanceMock()
-        );
+      debugShowCheckedModeBanner: false,
+
+      //home: NavigationBarScreen(), // we start from here
+      home: DemoPage(),
+      // home: WelcomePage()
+    );
   }
 }

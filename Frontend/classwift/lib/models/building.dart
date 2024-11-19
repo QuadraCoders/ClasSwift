@@ -62,7 +62,8 @@
 //   }
 // }
 
-import 'package:classwift/models/Classroom.dart';
+
+import 'Classroom.dart';
 
 class Building {
   final int buildingNo;
