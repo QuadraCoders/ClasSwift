@@ -182,15 +182,11 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(title, style: TextStyle(fontSize: 18)),
         trailing: Switch(
           value: value,
-          onChanged: (newValue) {
-            setState(() {
-              onChanged(newValue);
-            });
-          },
-          activeTrackColor: Color(0xFF81B2DD), // Active track color for enabled switches
+          onChanged: onChanged, // Directly pass the onChanged function
+          activeTrackColor: Color(0xFF81B2DD),
           activeColor: Colors.white,
-          inactiveThumbColor: darkGrey, // Dark grey for inactive thumb
-          inactiveTrackColor: const Color.fromARGB(255, 238, 236, 236), // Default for inactive track
+          inactiveThumbColor: darkGrey,
+          inactiveTrackColor: const Color.fromARGB(255, 238, 236, 236),
         ),
       ),
     );
@@ -207,7 +203,7 @@ class _SettingsPageState extends State<SettingsPage> {
             Text('Theme', style: TextStyle(fontSize: 18)),
             Icon(
               isDarkMode ? Icons.nights_stay : Icons.wb_sunny,
-              color: isDarkMode ? pastelDarkBlue : darkSunColor, // Set icon color based on theme
+              color: isDarkMode ? pastelDarkBlue : darkSunColor,
             ),
           ],
         ),
@@ -218,10 +214,10 @@ class _SettingsPageState extends State<SettingsPage> {
               isDarkMode = value;
             });
           },
-          activeTrackColor: Color(0xFF224B65), // Day theme color
-          activeColor: Colors.white, // Night theme active thumb
-          inactiveThumbColor: Colors.white, // For inactive thumb
-          inactiveTrackColor: pastelYellow, // Pastel yellow for inactive track
+          activeTrackColor: Color(0xFF224B65),
+          activeColor: Colors.white,
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: pastelYellow,
         ),
       ),
     );
@@ -236,17 +232,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7), // Slightly transparent background
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+      decoration: _boxDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -259,7 +245,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: [
                   Row(
                     children: [
-                      Icon(icon, color: policyIconColor), // Set color for the icon
+                      Icon(icon, color: policyIconColor),
                       SizedBox(width: 10),
                       Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
@@ -285,7 +271,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   BoxDecoration _boxDecoration() {
     return BoxDecoration(
-      color: Colors.white.withOpacity(0.8), // White with some transparency
+      color: Colors.white.withOpacity(0.8),
       borderRadius: BorderRadius.circular(10),
       boxShadow: [
         BoxShadow(
