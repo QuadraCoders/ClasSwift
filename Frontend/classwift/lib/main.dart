@@ -1,3 +1,4 @@
+import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Availability_Page.dart';
 import 'package:classwift/pages/MaintenanceMock.';
 import 'package:classwift/pages/MaintenanceView';
@@ -33,7 +34,8 @@ class MainApp extends StatelessWidget {
         //home:ContactUsPage()
         //home:MaintenanceView()
         //home:MaintenanceMock()
-        home:SettingsPage()
+        //home:SettingsPage()
+        home: about_us()
         );
   }
 }
