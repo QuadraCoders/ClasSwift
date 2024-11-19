@@ -3,6 +3,8 @@
 import 'package:classwift/card/event_card.dart';
 import 'package:classwift/card/report_history_card.dart';
 import 'package:classwift/card/services_card.dart';
+import 'package:classwift/pages/About_us.dart';
+import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/history_page.dart';
 import 'package:classwift/pages/login_page.dart';
@@ -54,20 +56,22 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 20),
             ListTile(
-              leading: Icon(Icons.settings,
-                  color: Color.fromARGB(255, 121, 89, 178)),
-              title: Text('Settings'),
-              onTap: () {
-                // Action for Settings
-              },
-            ),
+                leading: Icon(Icons.settings,
+                    color: Color.fromARGB(255, 121, 89, 178)),
+                title: Text('Settings'),
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return SettingsPage();
+                  }));
+                },
+                ),
             ListTile(
               leading: Icon(Icons.info_outline_rounded,
                   color: Color.fromARGB(255, 121, 89, 178)),
               title: Text('About us'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return HomePage();
+                  return about_us();
                 }));
               },
             ),
