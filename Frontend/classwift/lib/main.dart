@@ -1,4 +1,6 @@
 import 'package:classwift/pages/Demo.dart';
+import 'package:classwift/pages/MaintenanceView.dart';
+import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +17,8 @@ class MainApp extends StatelessWidget {
 
       //home: NavigationBarScreen(), // we start from here
       home: DemoPage(),
-      // home: WelcomePage()
+      // home: WelcomePage(),
+      //home: MaintenanceView(),
     );
   }
 }

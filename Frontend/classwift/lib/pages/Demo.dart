@@ -1,332 +1,419 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:classwift/api_service.dart';
-import 'package:classwift/pages/NavigationBarScreen.dart';
+import 'package:classwift/pages/MaintenanceMock.';
 import 'package:flutter/material.dart';
+import 'package:classwift/pages/login_page.dart';
+import 'package:classwift/pages/contact_page.dart';
 
 class DemoPage extends StatefulWidget {
   const DemoPage({super.key});
 
   @override
-  _ReportPageState createState() => _ReportPageState();
+  State<DemoPage> createState() => _MaintenanceMockState();
 }
 
-class _ReportPageState extends State<DemoPage> {
-  String? selectedBuilding;
-  String? selectedFloor;
-  String? selectedClassNo;
-  String? selectedIssueType;
-  final TextEditingController _descriptionController = TextEditingController();
+class _MaintenanceMockState extends State<DemoPage> {
+  List<String> reportIDs = [];
+  Map<String, String> reportDetails = {};
+  List<String> archivedReports = []; // Store archived reports
+  String? expandedReportID;
 
-  final List<String> floors = [];
-  List<String> classNumbers = [];
-  List<Map<String, dynamic>> classrooms = [];
+  // To keep track of the progress status for each report
+  Map<String, bool> reportInProgress = {}; // Track progress
+  bool isLoading = true; // Loading state
 
   @override
   void initState() {
     super.initState();
-    _loadBuildingData();
+    _loadReports();
   }
 
-  Future<void> _loadBuildingData() async {
-    try {
-      final building = await ApiService().fetchBuildingData();
-      setState(() {
-        classrooms = building.classrooms
-            .map((classroom) => {
-                  'floor': classroom.floor,
-                  'classroomNo': classroom.classroomNo,
-                  'capacity': classroom.capacity,
-                })
-            .toList();
-        floors
-            .addAll(classrooms.map((room) => room['floor'].toString()).toSet());
-      });
-    } catch (e) {
-      print("Error loading building data: $e");
-    }
-  }
+  // Mock function to simulate reading from a file or backend
+  Future<void> _loadReports() async {
+    // Simulate a network delay
+    await Future.delayed(Duration(seconds: 2));
 
-  void _updateClassNumbers(String floor) {
+    // Simulated report data
+    reportIDs = ['1020', '1021', '1022', '1023', '1024'];
+    reportDetails = {
+      '1020': 'Projector not working in Room 105.',
+      '1021': 'Cold class conditions in Building B.',
+      '1022': 'Computer not working in Lab 201.',
+      '1023': 'RORO & TATA being distractive of beauty; need to change class.',
+      '1024': 'Light bulb out in Room 102.',
+    };
+
     setState(() {
-      classNumbers = classrooms
-          .where((room) => room['floor'].toString() == floor)
-          .map((room) => 'Class ${room['classroomNo']}')
-          .toList();
+      isLoading = false; // Loading finished
     });
   }
 
-  Future<void> _saveReport() async {
-    final reportData = {
-      "reportId": _generateReportId(),
-      "building": selectedBuilding,
-      "floor": selectedFloor,
-      "classroomNo": selectedClassNo,
-      "date": DateTime.now().toIso8601String().split('T').first,
-      "issueType": selectedIssueType,
-      "problemDesc": _descriptionController.text,
-      "status": "Under maintenance",
-      "user_id": 1004
-    };
-
-    const filePath = 'lib/assets/reports.json';
-    final file = File(filePath);
-
-    try {
-      List<dynamic> reports = [];
-      if (await file.exists()) {
-        final fileContents = await file.readAsString();
-        final jsonData = json.decode(fileContents);
-        reports = jsonData['reports'] ?? [];
-      }
-
-      reports.add(reportData);
-      final updatedData = json.encode({"reports": reports});
-      await file.writeAsString(updatedData, mode: FileMode.write);
-
-      _showFeedbackDialog(true);
-    } catch (e) {
-      print("Error saving report: $e");
-      _showFeedbackDialog(false);
-    }
+  void _archiveReport(String reportID) {
+    setState(() {
+      archivedReports.add(reportID);
+      reportIDs.remove(reportID);
+      reportInProgress[reportID] =
+          false; // Initially, it will not be in progress
+    });
   }
 
-  void _showFeedbackDialog(bool isSuccess) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return FeedbackPopup(
-          message: isSuccess
-              ? 'Your report has been submitted successfully!'
-              : 'There was an error submitting your report. Please try again.',
-          isSuccess: isSuccess,
-          onClose: () {
-            Navigator.of(context).pop();
-            if (isSuccess) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const NavigationBarScreen()),
-                (route) => false,
-              );
-            }
-          },
-        );
+  void _setInProgress(String reportID) {
+    setState(() {
+      reportInProgress[reportID] = true; // Set report as in progress
+    });
+  }
+
+  Widget _buildReportCard(String reportID) {
+    bool isExpanded = reportID == expandedReportID;
+
+    // Determine the background color based on in-progress status
+    Color backgroundColor = reportInProgress[reportID] == true
+        ? Colors.yellow.withOpacity(0.5) // Pastel yellow if in progress
+        : Colors.white.withOpacity(0.8); // Default color
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          expandedReportID =
+              isExpanded ? null : reportID; // Collapse if already expanded
+        });
       },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: backgroundColor, // Use determined background color
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2), // Soft shadow
+              blurRadius: 10,
+              offset: Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'New Report #$reportID',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            if (isExpanded) ...[
+              SizedBox(height: 5),
+              Text(
+                'Details: ${reportDetails[reportID] ?? 'No details available.'}',
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Color(0xFFB2E6B2), // Pastel green for "Fixed"
+                      foregroundColor: Colors.black,
+                    ),
+                    onPressed: () => _archiveReport(reportID),
+                    child: Text('Fixed'),
+                  ),
+                  SizedBox(width: 10),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Color(0xFFFFC6C6), // Pastel red for "In Progress"
+                      foregroundColor: Colors.black,
+                    ),
+                    onPressed: () {
+                      _setInProgress(
+                          reportID); // Set in progress when button pressed
+                    },
+                    child: Text('In Progress'),
+                  ),
+                ],
+              ),
+              if (reportInProgress[reportID] == true) ...[
+                SizedBox(height: 10),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  padding: EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.yellow[300], // Pastel yellow background
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    'Under Construction',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildArchivedReportCard(String reportID) {
+    bool isExpanded = expandedReportID == reportID;
+
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          expandedReportID = isExpanded ? null : reportID; // Toggle details
+        });
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.6), // Dark shade for archived
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Archived Report #$reportID',
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
+            if (isExpanded) ...[
+              SizedBox(height: 5),
+              Text(
+                'Details: ${reportDetails[reportID] ?? 'No details available.'}',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Report an Issue')),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            SizedBox(height: 30),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.menu_rounded,
+                      color: Color.fromARGB(255, 121, 89, 178)),
+                  SizedBox(height: 10),
+                  Text(
+                    'More',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(255, 121, 89, 178),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            ListTile(
+              leading: Icon(Icons.settings,
+                  color: Color.fromARGB(255, 121, 89, 178)),
+              title: Text('Settings'),
+              onTap: () {
+                // Action for Settings
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.info_outline_rounded,
+                  color: Color.fromARGB(255, 121, 89, 178)),
+              title: Text('About us'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return MaintenanceMock();
+                }));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.support_agent,
+                  color: Color.fromARGB(255, 121, 89, 178)),
+              title: Text('Contact Us'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return ContactUsPage();
+                }));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app,
+                  color: Color.fromARGB(255, 121, 89, 178)),
+              title: Text('Exit'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return LoginPage();
+                }));
+              },
+            ),
+          ],
+        ),
+      ),
       body: Stack(
         children: [
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/wallpapers (2).png',
+              'lib/assets/wallpaper.png',
               fit: BoxFit.cover,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              children: [
-                const Center(
-                  child: Text(
-                    'Report Form',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
+          SafeArea(
+            child: isLoading
+                ? Center(
+                    child: CircularProgressIndicator()) // Show loading spinner
+                : SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 15),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Builder(
+                                builder: (context) => IconButton(
+                                  icon: Icon(Icons.menu,
+                                      color: Color.fromARGB(255, 56, 120, 176)),
+                                  onPressed: () {
+                                    Scaffold.of(context).openDrawer();
+                                  },
+                                ),
+                              ),
+                              Image.asset(
+                                'lib/assets/logo.png',
+                                height: 45,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 30),
+                          child: Container(
+                            alignment: Alignment.bottomLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Hello,',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                Text(
+                                  'Hulk',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                color: Color.fromARGB(255, 210, 224, 251),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        'From classes to repairs, \nClasSwift cares',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 22,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(width: 50),
+                                  Image.asset(
+                                    'lib/assets/college class-amico.png',
+                                    height: 120,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 25),
+
+                        // New Reports Section
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'New Reports',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color(0xFF81B2DD), // Set color for title
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 15),
+                        // List the report cards
+                        Column(
+                          children: reportIDs.map((reportID) {
+                            return _buildReportCard(reportID);
+                          }).toList(),
+                        ),
+
+                        // Archived Reports Section
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 25.0, vertical: 15),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Archived Reports',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color(0xFF81B2DD), // Set color for title
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Display archived reports if any
+                        if (archivedReports.isNotEmpty)
+                          Column(
+                            children: archivedReports.map((reportID) {
+                              return _buildArchivedReportCard(reportID);
+                            }).toList(),
+                          ),
+                      ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                const Divider(),
-                const SizedBox(height: 40),
-                _buildDropdown(
-                  label: 'Building',
-                  value: selectedBuilding,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedBuilding = value;
-                    });
-                  },
-                  items: ['Building 11'],
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  label: 'Floor',
-                  value: selectedFloor,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedFloor = value;
-                      _updateClassNumbers(value!);
-                      selectedClassNo = null;
-                    });
-                  },
-                  items: floors,
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  label: 'Class Number',
-                  value: selectedClassNo,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedClassNo = value;
-                    });
-                  },
-                  items: classNumbers,
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  label: 'Issue Type',
-                  value: selectedIssueType,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedIssueType = value;
-                    });
-                  },
-                  items: ['Electrical', 'Plumbing', 'Furniture'],
-                ),
-                const SizedBox(height: 16),
-                _buildDescriptionField(),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: _saveReport,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    backgroundColor: const Color.fromARGB(255, 126, 194, 226),
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDropdown({
-    required String label,
-    required String? value,
-    required ValueChanged<String?> onChanged,
-    required List<String> items,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          width: 150,
-          child: DropdownButtonFormField<String>(
-            value: value,
-            onChanged: onChanged,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            ),
-            items: items
-                .map((item) => DropdownMenuItem(
-                      value: item,
-                      child: Text(item),
-                    ))
-                .toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDescriptionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Problem Description',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Icon(Icons.attachment),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _descriptionController,
-          maxLines: 5,
-          decoration: InputDecoration(
-            hintText: 'Write a brief description of the problem',
-            hintStyle: const TextStyle(color: Colors.grey),
-            border: const OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.8),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _generateReportId() {
-    final random = DateTime.now().millisecondsSinceEpoch.toString();
-    return "ID$random";
-  }
-}
-
-class FeedbackPopup extends StatelessWidget {
-  final String message;
-  final bool isSuccess;
-  final VoidCallback onClose;
-
-  const FeedbackPopup({
-    required this.message,
-    required this.isSuccess,
-    required this.onClose,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSuccess ? Icons.check_circle : Icons.error,
-              color: isSuccess ? Colors.green : Colors.red,
-              size: 50,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onClose,
-              child: const Text('Close'),
-            ),
-          ],
-        ),
       ),
     );
   }

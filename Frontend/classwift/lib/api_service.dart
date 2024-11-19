@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:classwift/models/Report.dart';
 import 'package:http/http.dart' as http;
 import 'models/building.dart';
 
@@ -13,6 +14,17 @@ class ApiService {
     } else {
       throw Exception('Failed to load building data');
     }
-    
+  }
+
+  Future<List<Report>> fetchReports() async {
+    final response = await http.get(Uri.parse('$baseUrl/reports')); 
+
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      // Convert the response into a list of Report objects
+      return data.map((report) => Report.fromJson(report)).toList();
+    } else {
+      throw Exception('Failed to load reports');
+    }
   }
 }

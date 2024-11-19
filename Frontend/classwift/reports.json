@@ -1,0 +1,15 @@
+{
+    "reports": [
+        {
+            "reportId": "ID1732005810010",
+            "building": "Building 11",
+            "floor": "2",
+            "classroomNo": "Class 202",
+            "date": "2024-11-19",
+            "issueType": "Plumbing",
+            "problemDesc": "meowmeow",
+            "status": "Under maintenance",
+            "user_id": 1004
+        }
+    ]
+}
