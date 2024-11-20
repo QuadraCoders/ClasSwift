@@ -18,5 +18,15 @@
         "problemDesc": "The projector in classroom 202 is not working.",
         "status": "Resolved",
         "userId": 456
+    },
+    {
+        "reportId": "R002",
+        "buildingNo": 11,
+        "floor": "2nd",
+        "classroomNo": "202",
+        "issueType": "Broken Projector",
+        "problemDesc": "The projector in classroom 202 is not working.",
+        "status": "Resolved",
+        "userId": 456
     }
 ]

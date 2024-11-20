@@ -5,7 +5,7 @@ from typing import List
 
 app = FastAPI()
 
-# schemas using FastAPI's BaseModel from the pydantic library.
+# Schemas using FastAPI's BaseModel from the Pydantic library
 class Classroom(BaseModel):
     classroomNo: int
     floor: int
@@ -24,13 +24,14 @@ class Building(BaseModel):
 
 class Report(BaseModel):
     reportId: str
-    buildingNo: int
+    building: str
     floor: str
     classroomNo: str
+    date: str
     issueType: str
     problemDesc: str
     status: str
-    userId: int
+    user_id: int
 
 # Load building data from a JSON file
 try:
@@ -44,11 +45,10 @@ except json.JSONDecodeError:
     building_data = None
 
 # Load reports data from a JSON file
-# note to self: add this path Frontend/classwift/
-
 try:
-    with open("reports.json", "r") as file:
-        reports_data = json.load(file)
+    with open("Frontend/classwift/reports.json", "r") as file:
+        reports_file_data = json.load(file)
+        reports_data = reports_file_data.get("reports", [])  # Extract the 'reports' key
 except FileNotFoundError:
     print("Error: 'reports.json' file not found. Ensure the file is in the correct directory.")
     reports_data = None
@@ -82,6 +82,7 @@ def get_classrooms():
 @app.get("/reports", response_model=List[Report])
 def get_reports():
     if reports_data:
+        #return reports_data["reports"]  # Extract 'reports' key
         return reports_data
     else:
-        return {"error": "Reports data not available. Please check the 'reports.json' file."}
+            return {"error": "Reports data not available. Please check the 'reports.json' file."}

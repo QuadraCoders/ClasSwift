@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+import 'package:classwift/models/Report.dart';
+import 'package:classwift/api_service.dart';
 import 'package:classwift/card/event_card.dart';
 import 'package:classwift/card/report_history_card.dart';
 import 'package:classwift/card/services_card.dart';
+import 'package:classwift/models/Report.dart';
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/contact_page.dart';
@@ -12,6 +16,11 @@ import 'package:classwift/pages/profile_page.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/Availability_Page.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:classwift/models/Report.dart';
+import 'package:classwift/models/building.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +30,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Report> reports = [];
+  bool isLoading = true;
+  final ApiService _apiService = ApiService(); // Initialize ApiService
+
+  @override
+  void initState() {
+    super.initState();
+    fetchReports();
+  }
+
+  Future<void> fetchReports() async {
+    try {
+      // Use the ApiService to fetch reports
+      final fetchedReports = await _apiService.fetchReports();
+
+      setState(() {
+        reports = fetchedReports;
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching reports: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,15 +92,15 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 20),
             ListTile(
-                leading: Icon(Icons.settings,
-                    color: Color.fromARGB(255, 121, 89, 178)),
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SettingsPage();
-                  }));
-                },
-                ),
+              leading: Icon(Icons.settings,
+                  color: Color.fromARGB(255, 121, 89, 178)),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SettingsPage();
+                }));
+              },
+            ),
             ListTile(
               leading: Icon(Icons.info_outline_rounded,
                   color: Color.fromARGB(255, 121, 89, 178)),
@@ -256,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                             iconImagePath: 'lib/assets/time-past.png',
                             pageTitle: 'History',
                             buttonText: 'review history',
-                            pageName: history_page('Reports History'),
+                            pageName: history_page(),
                           ),
                         ],
                       ),
@@ -332,8 +368,7 @@ class _HomePageState extends State<HomePage> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return const history_page(
-                                  ''); // MAKE A POP UP PAGE PLEASE
+                              return const history_page(); // MAKE A POP UP PAGE PLEASE
                             }));
                           },
                           child: Text(
@@ -347,44 +382,34 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-
-                  // Horizontal ListView for Recents
                   Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: SizedBox(
-                      height: 250, // Set height for horizontal ListView
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          ReportHistoryCard(
-                            reportBuilding: 12,
-                            reportDate: '12/12/1222',
-                            reportDescribtion: 'idk',
-                            reportFloor: 1,
-                            reportID: '1020',
-                            reportIssue: 'many',
-                            reportRoomNo: 102,
-                          ),
-                          ReportHistoryCard(
-                            reportBuilding: 12,
-                            reportDate: '12/12/1222',
-                            reportDescribtion: 'idk',
-                            reportFloor: 1,
-                            reportID: '1020',
-                            reportIssue: 'many',
-                            reportRoomNo: 102,
-                          ),
-                          ReportHistoryCard(
-                            reportBuilding: 12,
-                            reportDate: '12/12/1222',
-                            reportDescribtion: 'idk',
-                            reportFloor: 1,
-                            reportID: '1020',
-                            reportIssue: 'many',
-                            reportRoomNo: 102,
-                          ),
-                        ],
-                      ),
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: isLoading
+                          ? CircularProgressIndicator() // Show loading indicator
+                          : reports.isEmpty
+                              ? Text(
+                                  'No reports available') // Show message if no reports
+                              : SizedBox(
+                                  height: 250,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: reports.length,
+                                    itemBuilder: (context, index) {
+                                      Report report =
+                                          reports[index]; // Get each report
+                                      return ReportHistoryCard(
+                                        reportID: report.reportId,
+                                        reportDate: report.date,
+                                        reportBuilding: report.building,
+                                        reportFloor: report.floor,
+                                        reportRoomNo: report.classroomNo,
+                                        reportIssue: report.issueType,
+                                        reportDescription: report.problemDesc,
+                                      );
+                                    },
+                                  ),
+                                ),
                     ),
                   ),
                 ],

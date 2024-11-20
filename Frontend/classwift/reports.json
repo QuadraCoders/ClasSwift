@@ -10,6 +10,28 @@
             "problemDesc": "meowmeow",
             "status": "Under maintenance",
             "user_id": 1004
+        },
+        {
+            "reportId": "ID1732116629423",
+            "building": "Building 11",
+            "floor": "1",
+            "classroomNo": "Class 101",
+            "date": "2024-11-20",
+            "issueType": "Broken Projector",
+            "problemDesc": "hey",
+            "status": "Under maintenance",
+            "user_id": 1004
+        },
+        {
+            "reportId": "ID1732134577149",
+            "building": "Building 11",
+            "floor": "2",
+            "classroomNo": "Class 202",
+            "date": "2024-11-20",
+            "issueType": "Broken Projector",
+            "problemDesc": "me testing",
+            "status": "Under maintenance",
+            "user_id": 1004
         }
     ]
 }
