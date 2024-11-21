@@ -56,15 +56,15 @@ class _HomePageState extends State<HomePage> {
             ),
             SizedBox(height: 20),
             ListTile(
-                leading: Icon(Icons.settings,
-                    color: Color.fromARGB(255, 121, 89, 178)),
-                title: Text('Settings'),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SettingsPage();
-                  }));
-                },
-                ),
+              leading: Icon(Icons.settings,
+                  color: Color.fromARGB(255, 121, 89, 178)),
+              title: Text('Settings'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SettingsPage();
+                }));
+              },
+            ),
             ListTile(
               leading: Icon(Icons.info_outline_rounded,
                   color: Color.fromARGB(255, 121, 89, 178)),
