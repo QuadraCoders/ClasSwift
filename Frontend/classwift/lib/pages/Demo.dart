@@ -1,332 +1,100 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:classwift/api_service.dart';
-import 'package:classwift/pages/NavigationBarScreen.dart';
+import 'package:classwift/card/report_history_card.dart';
+import 'package:classwift/models/Report.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class DemoPage extends StatefulWidget {
   const DemoPage({super.key});
 
   @override
-  _ReportPageState createState() => _ReportPageState();
+  State<DemoPage> createState() => _HomePageState();
 }
 
-class _ReportPageState extends State<DemoPage> {
-  String? selectedBuilding;
-  String? selectedFloor;
-  String? selectedClassNo;
-  String? selectedIssueType;
-  final TextEditingController _descriptionController = TextEditingController();
-
-  final List<String> floors = [];
-  List<String> classNumbers = [];
-  List<Map<String, dynamic>> classrooms = [];
+class _HomePageState extends State<DemoPage> {
+  List<Report> reports = [];
+  bool isLoading = true;
+  final ApiService _apiService = ApiService(); // Initialize ApiService
 
   @override
   void initState() {
     super.initState();
-    _loadBuildingData();
+    fetchReports();
   }
 
-  Future<void> _loadBuildingData() async {
+// alternative to apiservices
+  // Future<void> fetchReports() async {
+  //   try {
+  //     final response =
+  //         await http.get(Uri.parse('http://127.0.0.1:8000/reports'));
+  //     print('Response status: ${response.statusCode}');
+  //     print(
+  //         'Response body: ${response.body}'); // This will log the raw response
+
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> data = json.decode(response.body);
+  //       print('Decoded data: $data'); // Log the data to verify the structure
+  //       setState(() {
+  //         reports = data.map((item) => Report.fromJson(item)).toList();
+  //         isLoading = false;
+  //       });
+  //     } else {
+  //       throw Exception('Failed to load reports');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching reports: $e');
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
+
+  Future<void> fetchReports() async {
     try {
-      final building = await ApiService().fetchBuildingData();
+      // Use the ApiService to fetch reports
+      final fetchedReports = await _apiService.fetchReports();
+
       setState(() {
-        classrooms = building.classrooms
-            .map((classroom) => {
-                  'floor': classroom.floor,
-                  'classroomNo': classroom.classroomNo,
-                  'capacity': classroom.capacity,
-                })
-            .toList();
-        floors
-            .addAll(classrooms.map((room) => room['floor'].toString()).toSet());
+        reports = fetchedReports;
+        isLoading = false;
       });
     } catch (e) {
-      print("Error loading building data: $e");
+      print('Error fetching reports: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
-  }
-
-  void _updateClassNumbers(String floor) {
-    setState(() {
-      classNumbers = classrooms
-          .where((room) => room['floor'].toString() == floor)
-          .map((room) => 'Class ${room['classroomNo']}')
-          .toList();
-    });
-  }
-
-  Future<void> _saveReport() async {
-    final reportData = {
-      "reportId": _generateReportId(),
-      "building": selectedBuilding,
-      "floor": selectedFloor,
-      "classroomNo": selectedClassNo,
-      "date": DateTime.now().toIso8601String().split('T').first,
-      "issueType": selectedIssueType,
-      "problemDesc": _descriptionController.text,
-      "status": "Under maintenance",
-      "user_id": 1004
-    };
-
-    const filePath = 'lib/assets/reports.json';
-    final file = File(filePath);
-
-    try {
-      List<dynamic> reports = [];
-      if (await file.exists()) {
-        final fileContents = await file.readAsString();
-        final jsonData = json.decode(fileContents);
-        reports = jsonData['reports'] ?? [];
-      }
-
-      reports.add(reportData);
-      final updatedData = json.encode({"reports": reports});
-      await file.writeAsString(updatedData, mode: FileMode.write);
-
-      _showFeedbackDialog(true);
-    } catch (e) {
-      print("Error saving report: $e");
-      _showFeedbackDialog(false);
-    }
-  }
-
-  void _showFeedbackDialog(bool isSuccess) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return FeedbackPopup(
-          message: isSuccess
-              ? 'Your report has been submitted successfully!'
-              : 'There was an error submitting your report. Please try again.',
-          isSuccess: isSuccess,
-          onClose: () {
-            Navigator.of(context).pop();
-            if (isSuccess) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const NavigationBarScreen()),
-                (route) => false,
-              );
-            }
-          },
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Report an Issue')),
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset(
-              'lib/assets/wallpapers (2).png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              children: [
-                const Center(
-                  child: Text(
-                    'Report Form',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
+      appBar: AppBar(title: Text("Demo Reports")),
+      body: Center(
+        child: isLoading
+            ? CircularProgressIndicator() // Show loading indicator
+            : reports.isEmpty
+                ? Text('No reports available') // Show message if no reports
+                : SizedBox(
+                    height: 250,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: reports.length,
+                      itemBuilder: (context, index) {
+                        Report report = reports[index]; // Get each report
+                        return ReportHistoryCard(
+                          reportID: report.reportId,
+                          reportDate: report.date,
+                          reportBuilding: report.building,
+                          reportFloor: report.floor,
+                          reportRoomNo: report.classroomNo,
+                          reportIssue: report.issueType,
+                          reportDescription: report.problemDesc,
+                        );
+                      },
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                const Divider(),
-                const SizedBox(height: 40),
-                _buildDropdown(
-                  label: 'Building',
-                  value: selectedBuilding,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedBuilding = value;
-                    });
-                  },
-                  items: ['Building 11'],
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  label: 'Floor',
-                  value: selectedFloor,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedFloor = value;
-                      _updateClassNumbers(value!);
-                      selectedClassNo = null;
-                    });
-                  },
-                  items: floors,
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  label: 'Class Number',
-                  value: selectedClassNo,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedClassNo = value;
-                    });
-                  },
-                  items: classNumbers,
-                ),
-                const SizedBox(height: 16),
-                _buildDropdown(
-                  label: 'Issue Type',
-                  value: selectedIssueType,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedIssueType = value;
-                    });
-                  },
-                  items: ['Electrical', 'Plumbing', 'Furniture'],
-                ),
-                const SizedBox(height: 16),
-                _buildDescriptionField(),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: _saveReport,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    backgroundColor: const Color.fromARGB(255, 126, 194, 226),
-                  ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDropdown({
-    required String label,
-    required String? value,
-    required ValueChanged<String?> onChanged,
-    required List<String> items,
-  }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(
-          width: 150,
-          child: DropdownButtonFormField<String>(
-            value: value,
-            onChanged: onChanged,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            ),
-            items: items
-                .map((item) => DropdownMenuItem(
-                      value: item,
-                      child: Text(item),
-                    ))
-                .toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDescriptionField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Problem Description',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Icon(Icons.attachment),
-          ],
-        ),
-        const SizedBox(height: 8),
-        TextField(
-          controller: _descriptionController,
-          maxLines: 5,
-          decoration: InputDecoration(
-            hintText: 'Write a brief description of the problem',
-            hintStyle: const TextStyle(color: Colors.grey),
-            border: const OutlineInputBorder(),
-            filled: true,
-            fillColor: Colors.white.withOpacity(0.8),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _generateReportId() {
-    final random = DateTime.now().millisecondsSinceEpoch.toString();
-    return "ID$random";
-  }
-}
-
-class FeedbackPopup extends StatelessWidget {
-  final String message;
-  final bool isSuccess;
-  final VoidCallback onClose;
-
-  const FeedbackPopup({
-    required this.message,
-    required this.isSuccess,
-    required this.onClose,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              isSuccess ? Icons.check_circle : Icons.error,
-              color: isSuccess ? Colors.green : Colors.red,
-              size: 50,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onClose,
-              child: const Text('Close'),
-            ),
-          ],
-        ),
       ),
     );
   }

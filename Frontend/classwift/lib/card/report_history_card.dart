@@ -1,29 +1,23 @@
-// ignore: unused_import
-import 'package:classwift/pages/history_page.dart';
 import 'package:flutter/material.dart';
 
 class ReportHistoryCard extends StatelessWidget {
   final String reportID;
   final String reportDate;
-
-  // for now these are strings till i learn how to print out int lol
-  final reportBuilding;
-  final reportFloor;
-  final reportRoomNo;
+  final String reportBuilding;
+  final String reportFloor;
+  final String reportRoomNo;
   final String reportIssue;
-  final String reportDescribtion;
-  final reportImgPath;
+  final String reportDescription;
 
-// constructor to change icon and service in every card
-  const ReportHistoryCard({super.key, 
+  const ReportHistoryCard({
+    super.key,
     required this.reportID,
     required this.reportDate,
     required this.reportBuilding,
     required this.reportFloor,
     required this.reportRoomNo,
     required this.reportIssue,
-    required this.reportDescribtion,
-    this.reportImgPath,
+    required this.reportDescription,
   });
 
   @override
@@ -31,9 +25,8 @@ class ReportHistoryCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 15),
       child: Card(
-        elevation: 2,
-
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        margin: EdgeInsets.all(8),
         color: const Color.fromARGB(
             255, 255, 233, 167), // Light background color like in the image
         child: Padding(
@@ -52,38 +45,13 @@ class ReportHistoryCard extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ), // Horizontal line under Report ID
+              const SizedBox(height: 10), // Horizontal line under Report ID
               Text('Date: $reportDate'),
               Text('Building: $reportBuilding'),
               Text('Floor: $reportFloor'),
               Text('Room: $reportRoomNo'),
               Text('Issue type: $reportIssue'),
-              Text('Problem description: $reportDescribtion'),
-
-              // button to either show more/ update status
-              // Padding(
-              //   padding: const EdgeInsets.only(top: 8),
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.push(context,
-              //           MaterialPageRoute(builder: (context) {
-              //         return const history_page(
-              //             ''); // MAKE A POP UP PAGE PLEASE
-              //       }));
-              //     },
-              //     child: Text(
-              //       'Show details',
-              //       style: TextStyle(
-              //         color: Colors.white,
-              //       ),
-              //     ),
-              //     style: ElevatedButton.styleFrom(
-              //       backgroundColor: Color.fromARGB(255, 241, 170, 82),
-              //     ),
-              //   ),
-              // ),
+              Text('Problem description: $reportDescription'),
             ],
           ),
         ),

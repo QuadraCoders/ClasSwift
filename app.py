@@ -1,17 +1,11 @@
-# this is the updated version of the python code
-# to start the server 
-# 1- download the pip, look for instilation of FastAPI please
-# 2- ensure that youre using the right path 
-# 3- type the following in terminal
-# uvicorn app:app --reload 
-
+import json
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 
 app = FastAPI()
 
-# Pydantic models to structure the response data
+# Schemas using FastAPI's BaseModel from the Pydantic library
 class Classroom(BaseModel):
     classroomNo: int
     floor: int
@@ -28,57 +22,67 @@ class Building(BaseModel):
     accessible: bool
     classrooms: List[Classroom]
 
-# Your data (building and classrooms)
-building_data = {
-    "buildingNo": 11,
-    "location": "Fasaliyah",
-    "numOfFloors": 5,
-    "numOfClassrooms": 10,
-    "capacity": 150,
-    "accessible": True,
-    "classrooms": [
-        {"classroomNo": 100, "floor": 1, "capacity": 25, "isAvailable": True, "isALab": False},
-        {"classroomNo": 101, "floor": 1, "capacity": 40, "isAvailable": False, "isALab": True},
-        {"classroomNo": 201, "floor": 2, "capacity": 20, "isAvailable": True, "isALab": False},
-        {"classroomNo": 202, "floor": 2, "capacity": 35, "isAvailable": True, "isALab": True},
-        {"classroomNo": 301, "floor": 3, "capacity": 28, "isAvailable": True, "isALab": False},
-        {"classroomNo": 302, "floor": 3, "capacity": 32, "isAvailable": True, "isALab": True},
-        {"classroomNo": 401, "floor": 4, "capacity": 30, "isAvailable": True, "isALab": False},
-        {"classroomNo": 402, "floor": 4, "capacity": 40, "isAvailable": True, "isALab": True},
-        {"classroomNo": 501, "floor": 5, "capacity": 27, "isAvailable": True, "isALab": False},
-        {"classroomNo": 502, "floor": 5, "capacity": 38, "isAvailable": True, "isALab": True}
-    ]
-}
+class Report(BaseModel):
+    reportId: str
+    building: str
+    floor: str
+    classroomNo: str
+    date: str
+    issueType: str
+    problemDesc: str
+    status: str
+    user_id: int
 
-# reading static data from json file (DOESNT WORK)
-# try:
-#     with open("building11.json", "r") as file:
-#         building_data = json.load(file)
+# Load building data from a JSON file
+try:
+    with open("building11.json", "r") as file:
+        building_data = json.load(file)
+except FileNotFoundError:
+    print("Error: 'building11.json' file not found. Ensure the file is in the correct directory.")
+    building_data = None
+except json.JSONDecodeError:
+    print("Error: Failed to parse 'building11.json'. Check the file's structure.")
+    building_data = None
 
-#     building11 = Building(building_data["buildingNo"], building_data["location"], building_data["numOfFloors"], building_data["numOfClassrooms"], building_data["capacity"], building_data["accessible"])
-
-# except KeyError as e:
-#     print(f"Error: Missing key in building data - {e}")
-# except Exception as e:
-#     print(f"Error: An exception occurred - {e}")
-
-# Display classrooms in Building 11
-# building11.display_classrooms()  
+# Load reports data from a JSON file
+try:
+    with open("Frontend/classwift/reports.json", "r") as file:
+        reports_file_data = json.load(file)
+        reports_data = reports_file_data.get("reports", [])  # Extract the 'reports' key
+except FileNotFoundError:
+    print("Error: 'reports.json' file not found. Ensure the file is in the correct directory.")
+    reports_data = None
+except json.JSONDecodeError:
+    print("Error: Failed to parse 'reports.json'. Check the file's structure.")
+    reports_data = None
 
 
 # Root endpoint
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the FastAPI server!"}
+    return {"message": "Welcome to ClasSwift server!"}
 
-# Endpoint to fetch building data AKA schema
+# Endpoint to fetch building data
 @app.get("/building", response_model=Building)
 def get_building():
-    return building_data
+    if building_data:
+        return building_data
+    else:
+        return {"error": "Building data not available. Please check the JSON file."}
 
-# Endpoint to fetch classrooms data AKA schema
+# Endpoint to fetch classrooms data
 @app.get("/classrooms", response_model=List[Classroom])
 def get_classrooms():
-    return building_data["classrooms"]
+    if building_data:
+        return building_data["classrooms"]
+    else:
+        return {"error": "Classroom data not available. Please check the JSON file."}
 
-
+# Endpoint to fetch reports data
+@app.get("/reports", response_model=List[Report])
+def get_reports():
+    if reports_data:
+        #return reports_data["reports"]  # Extract 'reports' key
+        return reports_data
+    else:
+            return {"error": "Reports data not available. Please check the 'reports.json' file."}
