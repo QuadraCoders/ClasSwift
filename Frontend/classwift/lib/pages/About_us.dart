@@ -1,84 +1,124 @@
 import 'package:flutter/material.dart';
 
-class about_us extends StatelessWidget {
+class about_us extends StatefulWidget {
   const about_us({super.key});
 
+  @override
+  State<about_us> createState() => _AboutUsPageState();
+}
+
+class _AboutUsPageState extends State<about_us> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About Us'),
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.transparent,
+        title: Text('About Us'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // App Logo or Image
-            Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage(
-                    'lib/assets/images/logo.png'), // Update the image path as needed
-              ),
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'lib/assets/wallpapers (3).png', // Replace with your image path
+              fit: BoxFit.cover, // Ensures the image covers the entire screen
             ),
-            const SizedBox(height: 20),
+          ),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(30.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Header
+                      Center(
+                        child: Column(
+                          children: [
+                            SizedBox(
+                              height: 80,
+                            ),
+                            Text(
+                              'About Us',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30,
+                              ),
+                            ),
+                            Text(
+                              'Learn more about who we are and what we do.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 22,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 100),
+                          ],
+                        ),
+                      ),
+                      SizedBox(),
+                      // About Us Content
+                      Text(
+                        "About us",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "We help schools and universities manage classrooms and maintenance more easily. Our platform makes it simple to book classrooms, check availability, and report maintenance issues, saving time and reducing disruptions.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      SizedBox(height: 55),
 
-            // Title
-            const Text(
-              'Welcome to MyApp!',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 10),
+                      // Mission Statement
+                      Text(
+                        "Our Mission",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Our mission is to provide an easy-to-use platform that helps schools manage classroom bookings and maintenance, making everything run more smoothly.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      SizedBox(height: 55),
 
-            // Description
-            const Text(
-              'MyApp is your go-to solution for managing tasks efficiently and boosting productivity. '
-              'Our mission is to provide a seamless user experience and help you achieve your goals.',
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-
-            // Features List
-            const Text(
-              'Key Features:',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(' Easy Task Management'),
-                Text('✔ Real-Time Collaboration'),
-                Text('✔ Intuitive Design'),
-                Text('✔ Secure Data Handling'),
-              ],
-            ),
-            const Spacer(),
-
-            // Contact Information
-            Column(
-              children: const [
-                Text(
-                  'Contact Us',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      // Vision Statement
+                      Text(
+                        "Our Vision",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        "Our vision is to be the top solution for classroom and maintenance management, helping schools run efficiently and focus on teaching.",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      SizedBox(height: 90),
+                    ],
+                  ),
                 ),
-                SizedBox(height: 5),
-                Text('Email: support@myapp.com'),
-                Text('Website: www.myapp.com'),
-              ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

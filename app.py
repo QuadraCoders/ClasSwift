@@ -5,6 +5,7 @@ from typing import List
 
 app = FastAPI()
 
+#uvicorn app:app --reload
 # Schemas using FastAPI's BaseModel from the Pydantic library
 class Classroom(BaseModel):
     classroomNo: int

@@ -151,7 +151,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                             ),
                             SizedBox(height: 8),
                             Text(
-                              'Call our team Mon-Fri from 8am to 5pm.',
+                              'Call our team Sun-Thu from 9am to 5pm.',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,

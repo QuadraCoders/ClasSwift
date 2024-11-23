@@ -268,7 +268,7 @@ class _ReportPageState extends State<ReportPage> {
             Icon(Icons.attachment),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 30),
         TextField(
           controller: _descriptionController,
           maxLines: 5,
