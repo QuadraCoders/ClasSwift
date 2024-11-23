@@ -1,7 +1,7 @@
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Availability_Page.dart';
 import 'package:classwift/pages/Demo.dart';
-import 'package:classwift/pages/MaintenanceMock.';
+import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/Users_page.dart';
@@ -21,10 +21,12 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        //home: NavigationBarScreen(), // we start from here
-        //home: LoginPage(),
-        //home: DemoPage(),
-        home: WelcomePage());
+      debugShowCheckedModeBanner: false,
+      //home: NavigationBarScreen(), // we start from here
+      //home: LoginPage(),
+      home: WelcomePage(),
+      //home: MaintenanceMock(),
+      //home: DemoPage(),
+    );
   }
 }

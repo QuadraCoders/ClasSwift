@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               alignment: Alignment.centerLeft, // Align to the left
               padding:
-                  EdgeInsets.all(16.0), // Optional: Add padding for spacing
+                  EdgeInsets.all(16.0), 
               child: Column(
                 crossAxisAlignment:
                     CrossAxisAlignment.center, // Align children to the left

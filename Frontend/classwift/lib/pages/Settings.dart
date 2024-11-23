@@ -1,3 +1,4 @@
+import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart'; // Ensure to import the HomePage
 
@@ -18,18 +19,21 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // Define pastel colors
   final Color pastelYellow = Color(0xFFFFEBA0); // Pastel yellow color
-  final Color pastelDarkBlue = Color.fromARGB(255, 87, 123, 232); // Pastel dark blue for moon
-  final Color darkSunColor = Color.fromARGB(255, 255, 214, 32); // Darker pastel yellow for sun
-  final Color policyIconColor = Color.fromARGB(255, 88, 200, 163); // Policy icon color
+  final Color pastelDarkBlue =
+      Color.fromARGB(255, 87, 123, 232); // Pastel dark blue for moon
+  final Color darkSunColor =
+      Color.fromARGB(255, 255, 214, 32); // Darker pastel yellow for sun
+  final Color policyIconColor =
+      Color.fromARGB(255, 88, 200, 163); // Policy icon color
 
   // Define dark grey color for inactive switch
   final Color darkGrey = Color.fromARGB(255, 122, 120, 120);
 
   // Language options
   final Map<String, String> languages = {
-    'ع': 'Arabic',      // Arabic
-    'E': 'English',     // English
-    '中': 'Chinese',     // Chinese
+    'ع': 'Arabic', // Arabic
+    'E': 'English', // English
+    '中': 'Chinese', // Chinese
   };
 
   @override
@@ -43,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => HomePage()),
+              MaterialPageRoute(builder: (context) => NavigationBarScreen()),
             ); // Navigate back to HomePage
           },
         ),
@@ -152,7 +156,9 @@ class _SettingsPageState extends State<SettingsPage> {
       child: ListTile(
         title: Text('Language', style: TextStyle(fontSize: 18)),
         trailing: DropdownButton<String>(
-          value: languages.entries.firstWhere((entry) => entry.value == selectedLanguage).key,
+          value: languages.entries
+              .firstWhere((entry) => entry.value == selectedLanguage)
+              .key,
           icon: Icon(Icons.arrow_drop_down),
           onChanged: (String? newValue) {
             setState(() {
@@ -247,17 +253,21 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       Icon(icon, color: policyIconColor),
                       SizedBox(width: 10),
-                      Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(title,
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
                   ),
-                  Icon(isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                  Icon(
+                      isExpanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
                 ],
               ),
             ),
           ),
           if (isExpanded) ...[
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
               child: Text(
                 content,
                 style: TextStyle(fontSize: 16, color: Colors.black87),

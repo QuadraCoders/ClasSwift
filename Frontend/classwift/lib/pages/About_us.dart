@@ -19,7 +19,8 @@ class about_us extends StatelessWidget {
             Center(
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/app_logo.png'), // Update the image path as needed
+                backgroundImage: AssetImage(
+                    'lib/assets/images/logo.png'), // Update the image path as needed
               ),
             ),
             const SizedBox(height: 20),

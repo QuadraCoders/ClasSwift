@@ -40,16 +40,54 @@ class _HomePageState extends State<history_page> {
     }
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Scaffold(
+  //     appBar: AppBar(title: Text("Reports History")),
+  //     body: Center(
+  //       child: isLoading
+  //           ? CircularProgressIndicator() // Show loading indicator
+  //           : reports.isEmpty
+  //               ? Text('No reports available') // Show message if no reports
+  //               : Padding(
+  //                   padding: const EdgeInsets.all(10.0),
+  //                   child: GridView.builder(
+  //                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                       crossAxisCount: 2, // Number of columns
+  //                     ),
+  //                     itemCount: reports.length, // Number of items in the grid
+  //                     itemBuilder: (context, index) {
+  //                       Report report = reports[index]; // Get each report
+  //                       return Container(
+  //                         height: 100,
+  //                         child: ReportHistoryCard(
+  //                           reportID: report.reportId,
+  //                           reportDate: report.date,
+  //                           reportBuilding: report.building,
+  //                           reportFloor: report.floor,
+  //                           reportRoomNo: report.classroomNo,
+  //                           reportIssue: report.issueType,
+  //                           reportDescription: report.problemDesc,
+  //                         ),
+  //                       );
+  //                     },
+  //                   ),
+  //                 ),
+  //     ),
+  //   );
+  // }
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Reports History")),
-      body: Center(
-        child: isLoading
-            ? CircularProgressIndicator() // Show loading indicator
-            : reports.isEmpty
-                ? Text('No reports available') // Show message if no reports
-                : Padding(
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: Text("Reports History")),
+    body: Center(
+      child: isLoading
+          ? CircularProgressIndicator() // Show loading indicator
+          : reports.isEmpty
+              ? Text('No reports available') // Show message if no reports
+              : RefreshIndicator(
+                  onRefresh: fetchReports, // Call fetchReports() when user pulls down
+                  child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -58,22 +96,21 @@ class _HomePageState extends State<history_page> {
                       itemCount: reports.length, // Number of items in the grid
                       itemBuilder: (context, index) {
                         Report report = reports[index]; // Get each report
-                        return Container(
-                          height: 100,
-                          child: ReportHistoryCard(
-                            reportID: report.reportId,
-                            reportDate: report.date,
-                            reportBuilding: report.building,
-                            reportFloor: report.floor,
-                            reportRoomNo: report.classroomNo,
-                            reportIssue: report.issueType,
-                            reportDescription: report.problemDesc,
-                          ),
+                        return ReportHistoryCard(
+                          reportID: report.reportId,
+                          reportDate: report.date,
+                          reportBuilding: report.building,
+                          reportFloor: report.floor,
+                          reportRoomNo: report.classroomNo,
+                          reportIssue: report.issueType,
+                          reportDescription: report.problemDesc,
                         );
                       },
                     ),
                   ),
-      ),
-    );
-  }
+                ),
+    ),
+  );
+}
+
 }
