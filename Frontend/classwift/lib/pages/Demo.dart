@@ -1,173 +1,176 @@
+import 'package:classwift/api_service.dart';
+import 'package:classwift/models/Classroom.dart';
+import 'package:classwift/models/building.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class DemoPage extends StatefulWidget {
-  const DemoPage({super.key});
+  final String title;
+
+  const DemoPage({Key? key, required this.title}) : super(key: key);
 
   @override
-  State<DemoPage> createState() => _DemoPageState();
+  _DemoPageState createState() => _DemoPageState();
 }
 
 class _DemoPageState extends State<DemoPage> {
-  List<Map<String, dynamic>> reports =
-      []; // List to hold reports fetched from the server
-  String? expandedReportID; // Track expanded report ID
-  bool isLoading = true; // Loading state
+  late Future<Building> futureBuilding;
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    _fetchReports();
-  }
-
-  // Function to fetch reports from the server
-  Future<void> _fetchReports() async {
-    try {
-      final response =
-          await http.get(Uri.parse('https://your-api-endpoint.com/reports'));
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      if (response.statusCode == 200) {
-        final List<dynamic> data = jsonDecode(response.body);
-        print('Fetched reports: $data'); // Debugging output
-        setState(() {
-          reports = data
-              .map((report) => {
-                    'id': report['id'],
-                    'details': report['details'],
-                    'status': report['status'],
-                  })
-              .toList();
-          isLoading = false;
-        });
-      } else {
-        throw Exception('Failed to load reports');
-      }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      print('Error fetching reports: $e');
-    }
-  }
-
-  // Function to update the status of a report
-  Future<void> _updateReportStatus(String reportID, String status) async {
-    try {
-      final response = await http.post(
-        Uri.parse('https://your-api-endpoint.com/reports/$reportID'),
-        body: jsonEncode({'status': status}),
-        headers: {'Content-Type': 'application/json'},
-      );
-      if (response.statusCode == 200) {
-        setState(() {
-          reports = reports.map((report) {
-            if (report['id'] == reportID) {
-              report['status'] = status;
-            }
-            return report;
-          }).toList();
-        });
-      } else {
-        throw Exception('Failed to update report status');
-      }
-    } catch (e) {
-      print('Error updating report status: $e');
-    }
-  }
-
-  // Build report card
-  Widget _buildReportCard(Map<String, dynamic> report) {
-    final String reportID = report['id'];
-    final bool isExpanded = reportID == expandedReportID;
-
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          expandedReportID =
-              isExpanded ? null : reportID; // Toggle expanded view
-        });
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
-        padding: EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.8), // Default color
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2), // Soft shadow
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Text(
-              'Report #$reportID',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            if (isExpanded) ...[
-              SizedBox(height: 5),
-              Text(
-                'Details: ${report['details']}',
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Color(0xFFB2E6B2), // Pastel green for "Fixed"
-                      foregroundColor: Colors.black,
-                    ),
-                    onPressed: () => _updateReportStatus(reportID, 'Fixed'),
-                    child: Text('Fixed'),
-                  ),
-                  SizedBox(width: 10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Color(0xFFFFC6C6), // Pastel red for "In Progress"
-                      foregroundColor: Colors.black,
-                    ),
-                    onPressed: () =>
-                        _updateReportStatus(reportID, 'In Progress'),
-                    child: Text('In Progress'),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(
-                'Status: ${report['status']}',
-                style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
+    // Use the ApiService to fetch classroom data
+    futureBuilding = apiService.fetchBuildingData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? Center(child: CircularProgressIndicator()) // Show loading spinner
-          : SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+      appBar: AppBar(
+        title: const Text('View Classes Availability'),
+        backgroundColor: Colors.transparent,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('lib/assets/wallpapers (3).png'),
+            fit: BoxFit.fill, // Cover the entire screen
+          ),
+        ),
+        child: FutureBuilder<Building>(
+          future: futureBuilding,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              Building building = snapshot.data!;
+              final availableClassrooms = building.classrooms
+                  .where((classroom) => classroom.isAvailable)
+                  .toList();
+
+              return Padding(
+                padding: const EdgeInsets.all(
+                    16.0), // Padding around the entire content
                 child: Column(
-                  children: reports
-                      .map((report) => _buildReportCard(report))
-                      .toList(),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    Center(
+                      child: Text(
+                        'Available Classrooms in building 11',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Divider(endIndent: 25, indent: 25),
+                    const SizedBox(height: 30),
+                    Expanded(
+                      // This makes the GridView take the remaining space
+                      child: GridView(
+                        physics:
+                            const BouncingScrollPhysics(), // Give it a nice bounce effect
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Adjust the number of columns
+                          crossAxisSpacing: 12.0,
+                          mainAxisSpacing: 12.0,
+                        ),
+                        // Convert classrooms into widgets using `.map()`
+                        children: availableClassrooms.map((classroom) {
+                          return buildClassBox(classroom);
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget buildClassBox(Classroom classroom) {
+    Color color = classroom.isALab
+        ? const Color.fromARGB(255, 126, 181, 248)
+        : const Color(0xFFD0F0C0);
+
+    return Container(
+      width: 160, // Fixed width
+      height: 180, // Fixed height
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        color: color.withOpacity(0.8),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0), // Padding inside the card
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: classroom.isALab ? Colors.blue : Colors.green,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                child: Text(
+                  classroom.isALab ? 'Lab' : 'Class',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: 12), // Space between label and title
+              Text(
+                'Classroom No: ${classroom.classroomNo}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 10), // Space between title and details
+
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Floor',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(classroom.floor.toString()),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Capacity',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(classroom.capacity.toString()),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

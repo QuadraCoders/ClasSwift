@@ -91,8 +91,6 @@ class _ReportPageState extends State<ReportPage> {
     }
   }
 
-
-
   void _showFeedbackDialog(bool isSuccess) {
     showDialog(
       context: context,
@@ -322,10 +320,21 @@ class FeedbackPopup extends StatelessWidget {
               textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 16),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 36),
             ElevatedButton(
               onPressed: onClose,
-              child: const Text('Close'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                backgroundColor: Colors.grey[200],
+              ),
+              child: const Text(
+                'Close',
+                style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         ),

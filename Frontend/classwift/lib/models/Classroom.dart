@@ -2,7 +2,7 @@ class Classroom {
   final int classroomNo;
   final int floor;
   final int capacity;
-  final bool isAvailable;
+ bool isAvailable;
   final bool isALab;
 
   Classroom({

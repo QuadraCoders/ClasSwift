@@ -68,8 +68,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(height: 30),
             Container(
               alignment: Alignment.centerLeft, // Align to the left
-              padding:
-                  EdgeInsets.all(16.0), 
+              padding: EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment:
                     CrossAxisAlignment.center, // Align children to the left
@@ -278,7 +277,8 @@ class _HomePageState extends State<HomePage> {
                             iconImagePath: 'lib/assets/users-class.png',
                             pageTitle: 'View Availability',
                             buttonText: 'View now!',
-                            pageName: ServicesPage(title: 'View Availability'),
+                            pageName: AvailabilityPage(
+                                title: 'View Classes Availability'),
                           ),
                           ServicesCard(
                             serviceName: 'Report an issue',

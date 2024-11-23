@@ -1,45 +1,40 @@
-import 'dart:convert';
+import 'package:classwift/api_service.dart';
 import 'package:classwift/models/Classroom.dart';
 import 'package:classwift/models/building.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-class ServicesPage extends StatefulWidget {
+class AvailabilityPage extends StatefulWidget {
   final String title;
 
-  const ServicesPage({Key? key, required this.title}) : super(key: key);
+  const AvailabilityPage({Key? key, required this.title}) : super(key: key);
 
   @override
-  _ServicesPageState createState() => _ServicesPageState();
+  _DemoPageState createState() => _DemoPageState();
 }
 
-class _ServicesPageState extends State<ServicesPage> {
+class _DemoPageState extends State<AvailabilityPage> {
   late Future<Building> futureBuilding;
-
-  Future<Building> loadBuildingData() async {
-    final String response =
-        await rootBundle.loadString('lib/assets/building11.json');
-    final data = await json.decode(response);
-    return Building.fromJson(data);
-  }
+  final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
-    futureBuilding = loadBuildingData();
+    // Use the ApiService to fetch classroom data
+    futureBuilding = apiService.fetchBuildingData();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        title: const Text('View Classes Availability'),
+        backgroundColor: Colors.transparent,
       ),
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/wallpapers (3).png'),
-            fit: BoxFit.cover, // Cover the entire screen
+            fit: BoxFit.fill, // Cover the entire screen
           ),
         ),
         child: FutureBuilder<Building>(
@@ -61,40 +56,32 @@ class _ServicesPageState extends State<ServicesPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                      child: Text(
-                        'Building 11',
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          shadows: [
-                            Shadow(
-                              offset: const Offset(
-                                  2.0, 2.0), // Shadow offset for a better look
-                              blurRadius: 5.0,
-                              color: Colors.grey.withOpacity(0.5),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Center(
+                    //   child: Text(
+                    //     'Building 11',
+                    //     style: TextStyle(
+                    //       fontSize: 30,
+                    //       fontWeight: FontWeight.bold,
+                    //       color: Colors.black,
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 20),
                     Text(
-                      'Available Classrooms',
+                      'Available Classrooms in building 11',
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.grey[800],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     Expanded(
                       // This makes the GridView take the remaining space
                       child: GridView.builder(
                         physics:
                             const BouncingScrollPhysics(), // Give it a nice bounce effect
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount:
                               2, // Adjust the number of columns based on available space
                           crossAxisSpacing: 12.0,
@@ -151,7 +138,7 @@ class _ServicesPageState extends State<ServicesPage> {
                     Text(
                       'Classroom No: ${classroom.classroomNo}',
                       style: const TextStyle(
-                        fontSize: 22,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
