@@ -104,109 +104,170 @@ class _DemoPageState extends State<AvailabilityPage> {
     );
   }
 
+  // Widget buildClassBox(Classroom classroom) {
+  //   Color color = classroom.isALab
+  //       ? const Color.fromARGB(255, 126, 181, 248)
+  //       : const Color(0xFFD0F0C0);
+
+  //   return Container(
+  //     constraints: const BoxConstraints(
+  //         minHeight: 120), // Ensure each class box has a minimum height
+  //     child: Stack(
+  //       children: [
+  //         Card(
+  //           elevation: 2,
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(12.0),
+  //           ),
+  //           color: color.withOpacity(0.8),
+  //           child: ExpansionTile(
+  //             title: Padding(
+  //               padding: const EdgeInsets.symmetric(vertical: 8.0),
+  //               child: Column(
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   Container(
+  //                     height: 8,
+  //                     width: 30,
+  //                     decoration: BoxDecoration(
+  //                       color: classroom.isALab ? Colors.blue : Colors.green,
+  //                       borderRadius: BorderRadius.circular(4),
+  //                     ),
+  //                   ),
+  //                   const SizedBox(height: 8),
+  //                   Text(
+  //                     'Classroom No: ${classroom.classroomNo}',
+  //                     style: const TextStyle(
+  //                       fontSize: 20,
+  //                       fontWeight: FontWeight.bold,
+  //                       color: Colors.black,
+  //                     ),
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             children: [
+  //               Container(
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.white
+  //                       .withOpacity(0.5), // Set a transparent background
+  //                   borderRadius: const BorderRadius.vertical(
+  //                       bottom:
+  //                           Radius.circular(12.0)), // Match the card's radius
+  //                 ),
+  //                 child: ListTile(
+  //                   title: Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       buildDetailRow('Floor:', classroom.floor.toString()),
+  //                       buildDetailRow(
+  //                           'Capacity:', classroom.capacity.toString()),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         Positioned(
+  //           top: 10, // Position the label
+  //           left: 10,
+  //           child: Container(
+  //             decoration: BoxDecoration(
+  //               color: classroom.isALab
+  //                   ? Colors.blue.withOpacity(0.5)
+  //                   : Colors.green.withOpacity(0.5),
+  //               borderRadius: BorderRadius.circular(4),
+  //             ),
+  //             padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+  //             child: Text(
+  //               classroom.isALab ? 'Lab' : 'Class',
+  //               style: const TextStyle(
+  //                 color: Colors.white,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget buildClassBox(Classroom classroom) {
     Color color = classroom.isALab
         ? const Color.fromARGB(255, 126, 181, 248)
         : const Color(0xFFD0F0C0);
 
     return Container(
-      constraints: const BoxConstraints(
-          minHeight: 120), // Ensure each class box has a minimum height
-      child: Stack(
-        children: [
-          Card(
+        width: 160, // Fixed width
+        height: 180, // Fixed height
+        child: Card(
             elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.0),
             ),
             color: color.withOpacity(0.8),
-            child: ExpansionTile(
-              title: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Padding(
+                padding: const EdgeInsets.all(16.0), // Padding inside the card
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 8,
-                      width: 30,
-                      decoration: BoxDecoration(
-                        color: classroom.isALab ? Colors.blue : Colors.green,
-                        borderRadius: BorderRadius.circular(4),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          color: classroom.isALab ? Colors.blue : Colors.green,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        child: Text(
+                          classroom.isALab ? 'Lab' : 'Class',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Classroom No: ${classroom.classroomNo}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                      const SizedBox(
+                          height: 12), // Space between label and title
+                      Text(
+                        'Classroom No: ${classroom.classroomNo}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white
-                        .withOpacity(0.5), // Set a transparent background
-                    borderRadius: const BorderRadius.vertical(
-                        bottom:
-                            Radius.circular(12.0)), // Match the card's radius
-                  ),
-                  child: ListTile(
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildDetailRow('Floor:', classroom.floor.toString()),
-                        buildDetailRow(
-                            'Capacity:', classroom.capacity.toString()),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 10, // Position the label
-            left: 10,
-            child: Container(
-              decoration: BoxDecoration(
-                color: classroom.isALab
-                    ? Colors.blue.withOpacity(0.5)
-                    : Colors.green.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-              child: Text(
-                classroom.isALab ? 'Lab' : 'Class',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+                      const SizedBox(
+                          height: 10), // Space between title and details
 
-  Widget buildDetailRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(value),
-        ],
-      ),
-    );
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Floor',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(classroom.floor.toString()),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Capacity',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(classroom.capacity.toString()),
+                          ],
+                        ),
+                      ),
+                    ]))));
   }
 }

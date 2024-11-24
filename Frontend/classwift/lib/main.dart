@@ -4,11 +4,11 @@ import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
-import 'package:classwift/pages/Users_page.dart';
+import 'package:classwift/pages/welcome_page.dart';
 import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/history_page.dart';
-import 'package:classwift/pages/home_page.dart';
+import 'package:classwift/pages/student_view.dart';
 import 'package:classwift/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 
@@ -25,10 +25,10 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       //home: NavigationBarScreen(), // we start from here
       //home: LoginPage(),
-      //home: WelcomePage(),
+      home: WelcomePage(),
       //home: MaintenanceMock(),
-      //home: DemoPage(title: ''),
-      home: AlternativePage(title: ''),
+      //home: DemoPage(),
+      //home: AlternativePage(title: ''),
     );
   }
 }

@@ -7,7 +7,6 @@ class ServicesCard extends StatelessWidget {
   final String serviceName;
   final pageName;
   final String pageTitle;
-  final String buttonText;
 
 // constructor to change icon and service in every card
   const ServicesCard({super.key, 
@@ -15,7 +14,6 @@ class ServicesCard extends StatelessWidget {
     required this.serviceName,
     required this.pageName,
     required this.pageTitle,
-    required this.buttonText,
   });
 
   @override

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'dart:convert';
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/api_service.dart';
@@ -20,19 +22,17 @@ import 'package:flutter/material.dart';
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/models/building.dart';
 
-class DemoPage extends StatefulWidget {
-  const DemoPage({super.key});
+class StudentView extends StatefulWidget {
+  const StudentView({super.key});
 
   @override
-  State<DemoPage> createState() => _HomePageState();
+  State<StudentView> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<DemoPage> {
+class _HomePageState extends State<StudentView> {
   List<Report> reports = [];
   bool isLoading = true;
   final ApiService _apiService = ApiService(); // Initialize ApiService
-  List screens = [const DemoPage(), ProfilePage()];
-  int currentIndex = 0;
 
   @override
   void initState() {
@@ -60,27 +60,6 @@ class _HomePageState extends State<DemoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
-        unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
-        currentIndex: currentIndex,
-        onTap: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-          if (currentIndex == 1) {
-            // Navigate to ProfilePage when profile icon is tapped
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
-            );
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
-        ],
-      ),
       drawer: Drawer(
         //backgroundColor: Colors.white60,
         child: ListView(

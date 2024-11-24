@@ -9,6 +9,7 @@ import 'package:classwift/card/services_card.dart';
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Settings.dart';
+import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/history_page.dart';
 import 'package:classwift/pages/login_page.dart';
@@ -22,14 +23,14 @@ import 'package:flutter/material.dart';
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/models/building.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class FacultyView extends StatefulWidget {
+  const FacultyView({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FacultyView> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<FacultyView> {
   List<Report> reports = [];
   bool isLoading = true;
   final ApiService _apiService = ApiService(); // Initialize ApiService
@@ -273,25 +274,22 @@ class _HomePageState extends State<HomePage> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           ServicesCard(
-                            serviceName: 'View availability',
+                            serviceName: 'Find alternative classes',
                             iconImagePath: 'lib/assets/users-class.png',
-                            pageTitle: 'View Availability',
-                            buttonText: 'View now!',
-                            pageName: AvailabilityPage(
-                                title: 'View Classes Availability'),
+                            pageTitle: 'Find alternatives',
+                            pageName: AlternativePage(
+                                title: 'View alternative classes'),
                           ),
                           ServicesCard(
                             serviceName: 'Report an issue',
                             iconImagePath: 'lib/assets/file-edit.png',
                             pageTitle: 'Reports',
-                            buttonText: 'file a report',
                             pageName: ReportPage(),
                           ),
                           ServicesCard(
                             serviceName: 'History',
                             iconImagePath: 'lib/assets/time-past.png',
                             pageTitle: 'History',
-                            buttonText: 'review history',
                             pageName: history_page(),
                           ),
                         ],

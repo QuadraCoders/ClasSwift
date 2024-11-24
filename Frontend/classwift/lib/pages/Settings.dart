@@ -1,6 +1,6 @@
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart'; // Ensure to import the HomePage
+import 'student_view.dart'; // Ensure to import the HomePage
 
 class SettingsPage extends StatefulWidget {
   @override

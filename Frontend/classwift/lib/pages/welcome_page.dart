@@ -1,5 +1,8 @@
+import 'package:classwift/pages/Demo.dart';
+import 'package:classwift/pages/faculty_view.dart';
+import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart'; // Import the LoginPage
+import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -67,9 +70,12 @@ class _WelcomePageState extends State<WelcomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildCircleButton(context, "Student", Icons.school),
-                  _buildCircleButton(context, "Faculty", Icons.person),
-                  _buildCircleButton(context, "Maintenance", Icons.build),
+                  _buildCircleButton(
+                      context, "Student", Icons.school, DemoPage()),
+                  _buildCircleButton(
+                      context, "Faculty", Icons.person, FacultyView()),
+                  _buildCircleButton(
+                      context, "Maintenance", Icons.build, FacultyView()),
                 ],
               ),
             ],
@@ -79,20 +85,21 @@ class _WelcomePageState extends State<WelcomePage>
     );
   }
 
-  Widget _buildCircleButton(BuildContext context, String role, IconData icon) {
+  Widget _buildCircleButton(
+      BuildContext context, String role, IconData icon, Widget page) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the existing LoginPage
+        // Navigate to the page provided as a parameter
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
+          MaterialPageRoute(builder: (context) => page),
         );
       },
       child: Column(
         children: [
           Container(
-            width: 80, // Circle diameter
-            height: 80, // Circle diameter
+            width: 80,
+            height: 80,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: const Color(0xFF81B2DD),

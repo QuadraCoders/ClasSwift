@@ -2,6 +2,8 @@ import json
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+from typing import Optional
+
 
 app = FastAPI()
 
@@ -24,9 +26,9 @@ class Building(BaseModel):
 
 class Report(BaseModel):
     reportId: str
-    building: str
-    floor: str
-    classroomNo: str
+    building: Optional[str]  # Allow None
+    floor: Optional[str]     # Allow None
+    classroomNo: Optional[str]  # Allow None
     date: str
     issueType: str
     problemDesc: str
@@ -65,19 +67,36 @@ def get_classrooms():
         return {"error": "Classroom data not available in the JSON file."}
 
 # Endpoint to fetch reports data
+# @app.get("/reports", response_model=List[Report])
+# def get_reports():
+#     try:
+#         with open("Frontend/classwift/reports.json", "r") as file:
+#             reports_file_data = json.load(file)
+#             reports_data = reports_file_data.get("reports", [])
+#         return reports_data
+#     except FileNotFoundError:
+#         return {"error": "Reports data file not found. Please check 'reports.json'."}
+#     except json.JSONDecodeError:
+#         return {"error": "Failed to parse 'reports.json'. Check the file structure."}
+#     except KeyError:
+#         return {"error": "Reports data not available in the JSON file."}
+
 @app.get("/reports", response_model=List[Report])
 def get_reports():
     try:
         with open("Frontend/classwift/reports.json", "r") as file:
             reports_file_data = json.load(file)
             reports_data = reports_file_data.get("reports", [])
+            if not reports_data:
+                return {"error": "No reports found in the file."}
         return reports_data
     except FileNotFoundError:
         return {"error": "Reports data file not found. Please check 'reports.json'."}
     except json.JSONDecodeError:
         return {"error": "Failed to parse 'reports.json'. Check the file structure."}
-    except KeyError:
-        return {"error": "Reports data not available in the JSON file."}
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {str(e)}"}
+
 
 @app.post("/reports")
 def add_report(report: Report):

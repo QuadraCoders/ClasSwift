@@ -1,15 +1,45 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:classwift/pages/Demo.dart';
+import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    List screens = [const StudentView(), ProfilePage()];
+    int currentIndex = 1;
 
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
+        unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
+        currentIndex: currentIndex,
+        onTap: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+          if (currentIndex == 0) {
+            // Navigate to ProfilePage when profile icon is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DemoPage()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
+        ],
+      ),
       body: Stack(
         children: [
           // Background image
@@ -89,38 +119,6 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _buildProfilePicture() {
-  //   return Center(
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [
-  //         const SizedBox(height: 10.0), // Space before the avatar
-  //         // Border around profile picture
-  //         Container(
-  //           decoration: BoxDecoration(
-  //             shape: BoxShape.circle,
-  //             border: Border.all(
-  //               width: 4.0,
-  //               color: Color.fromARGB(200, 142, 187, 227),
-  //             ),
-  //           ),
-  //           child: const CircleAvatar(
-  //             radius: 62.0,
-  //             backgroundColor: Color.fromARGB(200, 142, 187, 227),
-  //             child: CircleAvatar(
-  //               radius: 60.0,
-  //               backgroundImage: AssetImage(
-  //                   'lib/assets/person.png'), // Use the correct asset path
-  //               backgroundColor:
-  //                   Colors.grey, // Fallback color if image fails to load
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget _buildIdCard() {
     return Card(

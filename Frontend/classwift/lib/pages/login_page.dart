@@ -1,6 +1,6 @@
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
+import 'student_view.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController idController = TextEditingController();
