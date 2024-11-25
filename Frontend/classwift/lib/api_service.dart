@@ -4,7 +4,7 @@ import 'package:classwift/models/Report.dart';
 import 'package:classwift/models/Student.dart';
 import 'package:http/http.dart' as http;
 import 'models/building.dart';
-import 'models/maintenace_staff.dart';
+import 'package:classwift/models/maintenace_staff.dart'; 
 
 class ApiService {
   static const String baseUrl = "http://127.0.0.1:8000";
@@ -102,15 +102,24 @@ class ApiService {
 }
 
  // New method to fetch maintenance staff data
-  Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
+ Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
     final response = await http.get(Uri.parse('$baseUrl/maintenance-staff'));
 
     if (response.statusCode == 200) {
-      // Parse the response body and return a list of MaintenanceStaff objects
       List<dynamic> data = json.decode(response.body);
       return data.map((staff) => MaintenanceStaff.fromJson(staff)).toList();
     } else {
       throw Exception('Failed to load maintenance staff data');
     }
   }
+
+  Future<MaintenanceStaff> fetchMaintenanceStaffById(String staffId) async {
+    List<MaintenanceStaff> staffMembers = await fetchMaintenanceStaff();
+    final staff = staffMembers.firstWhere(
+      (staff) => staff.staffId == staffId,
+      orElse: () => throw Exception('Staff not found'),
+    );
+    return staff;
+  }
 }
+
