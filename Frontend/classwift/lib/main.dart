@@ -10,6 +10,7 @@ import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/history_page.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:classwift/pages/profile_page.dart';
+import 'package:classwift/pages/maintenance_staff_profile.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -22,13 +23,14 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      //home: NavigationBarScreen(), // we start from here
-      //home: LoginPage(),
-      home: WelcomePage(),
-      //home: MaintenanceMock(),
-      //home: DemoPage(),
-      //home: AlternativePage(title: ''),
-    );
+        debugShowCheckedModeBanner: false,
+        //home: NavigationBarScreen(), // we start from here
+        //home: LoginPage(),
+        //home: WelcomePage()
+        //home: MaintenanceMock(),
+        //home: DemoPage(),
+        //home: AlternativePage(title: ''),
+        home: Maintenanceview()
+        );
   }
 }

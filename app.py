@@ -34,6 +34,13 @@ class Report(BaseModel):
     problemDesc: str
     status: str
     user_id: int
+    
+class Maintenance(BaseModel):
+    name: str
+    staff_Id: str
+    phone: int
+    email: str
+    department: str  
 
 # Root endpoint
 @app.get("/")
@@ -112,3 +119,20 @@ def add_report(report: Report):
         return {"error": "Reports data file not found. Please check 'reports.json'."}
     except json.JSONDecodeError:
         return {"error": "Failed to parse 'reports.json'. Check the file structure."}
+
+# Endpoint to fetch maintenance staff data
+@app.get("/maintenance-staff", response_model=List[MaintenanceStaff])
+def get_maintenance_staff():
+    try:
+        with open("maintenance_staff.json", "r") as file:
+            data = json.load(file)
+            staff_data = data.get("maintenance_staff", [])
+            if not staff_data:
+                return {"error": "No maintenance staff data found in the file."}
+        return staff_data
+    except FileNotFoundError:
+        return {"error": "Maintenance staff data file not found. Please check 'maintenance_staff.json'."}
+    except json.JSONDecodeError:
+        return {"error": "Failed to parse 'maintenance_staff.json'. Check the file structure."}
+    except Exception as e:
+        return {"error": f"An unexpected error occurred: {str(e)}"}
