@@ -19,7 +19,7 @@ class _DemoPageState extends State<AlternativePage> {
   @override
   void initState() {
     super.initState();
-    // Use the ApiService to fetch classroom data
+    // Fetch building data on initial load
     futureBuilding = apiService.fetchBuildingData();
   }
 
@@ -51,8 +51,7 @@ class _DemoPageState extends State<AlternativePage> {
                   .toList();
 
               return Padding(
-                padding: const EdgeInsets.all(
-                    16.0), // Padding around the entire content
+                padding: const EdgeInsets.all(16.0), // Padding around the entire content
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -72,15 +71,12 @@ class _DemoPageState extends State<AlternativePage> {
                     Expanded(
                       // This makes the GridView take the remaining space
                       child: GridView(
-                        physics:
-                            const BouncingScrollPhysics(), // Give it a nice bounce effect
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                        physics: const BouncingScrollPhysics(),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // Adjust the number of columns
                           crossAxisSpacing: 6.0,
                           mainAxisSpacing: 6.0,
                         ),
-                        // Convert classrooms into widgets using `.map()`
                         children: availableClassrooms.map((classroom) {
                           return buildClassBox(classroom);
                         }).toList(),
@@ -111,7 +107,7 @@ class _DemoPageState extends State<AlternativePage> {
         ),
         color: color.withOpacity(0.8),
         child: Padding(
-          padding: const EdgeInsets.all(10.0), // Padding inside the card
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -130,7 +126,7 @@ class _DemoPageState extends State<AlternativePage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12), // Space between label and title
+              const SizedBox(height: 12),
               Text(
                 'Classroom No: ${classroom.classroomNo}',
                 style: const TextStyle(
@@ -139,7 +135,7 @@ class _DemoPageState extends State<AlternativePage> {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 10), // Space between title and details
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Row(
@@ -188,13 +184,18 @@ class _DemoPageState extends State<AlternativePage> {
                       context: context,
                       builder: (BuildContext context) {
                         return FeedbackPopup(
-                          message:
-                              "You selected Classroom No: ${classroom.classroomNo}",
+                          message: "You selected Classroom No: ${classroom.classroomNo}",
                           isSuccess: true,
                           onClose: () {
                             // Update the classroom state here
                             setState(() {
                               classroom.isAvailable = false;
+                            });
+                            // Send the update request to the API
+                            apiService.updateClassroomAvailability(classroom.classroomNo, false); 
+                            // Refetch the data to reflect the change
+                            setState(() {
+                              futureBuilding = apiService.fetchBuildingData();
                             });
                             Navigator.of(context).pop(); // Close the dialog
                           },

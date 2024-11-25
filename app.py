@@ -74,30 +74,28 @@ def get_classrooms():
     try:
         with open("building11.json", "r") as file:
             building_data = json.load(file)
-            print("Classrooms Data:", building_data["classrooms"])  # Debug here
-            return building_data["classrooms"]
+        return building_data.get("classrooms", [])
     except Exception as e:
-        print("Error:", e)
-        return {"error": str(e)}
+        return {"error": f"Error reading classroom data: {str(e)}"}
 
+# Simplified Endpoint to update classroom availability or other data
 @app.put("/classrooms/{classroom_no}")
 def update_classroom(classroom_no: int, updated_classroom: Classroom):
-    """
-    Updates the availability and other details of a specific classroom in the JSON file.
-    """
     try:
         # Load the building data from the JSON file
         with open("building11.json", "r") as file:
             building_data = json.load(file)
         
-        # Find the classroom with the matching number
         classrooms = building_data.get("classrooms", [])
+        updated = False
+        
         for idx, classroom in enumerate(classrooms):
             if classroom["classroomNo"] == classroom_no:
-                # Update the classroom with the new data
-                classrooms[idx] = updated_classroom.dict()
+                classrooms[idx] = updated_classroom.dict()  # Update the classroom
+                updated = True
                 break
-        else:
+        
+        if not updated:
             return {"error": f"Classroom with number {classroom_no} not found."}
         
         # Save the updated data back to the JSON file
@@ -105,13 +103,13 @@ def update_classroom(classroom_no: int, updated_classroom: Classroom):
             json.dump(building_data, file, indent=4)
         
         return {"message": f"Classroom {classroom_no} updated successfully!"}
+    
     except FileNotFoundError:
         return {"error": "Building data file not found. Please check 'building11.json'."}
     except json.JSONDecodeError:
         return {"error": "Failed to parse 'building11.json'. Check the file structure."}
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
-
 
 # Endpoint to fetch reports data
 @app.get("/reports", response_model=List[Report])
@@ -130,7 +128,7 @@ def get_reports():
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
 
-
+# Endpoint to add a report
 @app.post("/reports")
 def add_report(report: Report):
     try:
