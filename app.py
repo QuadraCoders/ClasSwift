@@ -36,7 +36,7 @@ class Report(BaseModel):
     status: str
     user_id: int
     
-class Maintenance(BaseModel):
+class MaintenanceStaff(BaseModel):
     name: str
     staff_Id: str
     phone: int

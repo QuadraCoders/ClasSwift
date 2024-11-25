@@ -27,11 +27,11 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         //home: NavigationBarScreen(), // we start from here
         //home: LoginPage(),
-        //home: WelcomePage()
+        home: WelcomePage()
         //home: MaintenanceMock(),
         //home: DemoPage(),
         //home: AlternativePage(title: ''),
-        home: Maintenanceview()
+        //home: Maintenanceview()
         );
   }
 }
