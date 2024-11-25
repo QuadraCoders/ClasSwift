@@ -2,7 +2,7 @@ import json
 from pydantic import BaseModel
 from typing import List
 from typing import Optional
-from fastapi import FastAPI, HTTPException  # Don't forget to import HTTPException
+from fastapi import FastAPI, HTTPException, Body
 
 app = FastAPI()
 
@@ -37,10 +37,12 @@ class Report(BaseModel):
     
 class MaintenanceStaff(BaseModel):
     name: str
-    staff_Id: str
-    phone: int
+    staff_id: str
+    department: str
+    phone: str
     email: str
-    department: str  
+    password: str
+  
 
 class Student(BaseModel):
     name: str
@@ -170,19 +172,26 @@ def get_student(student_id: int):
         if student.student_id == student_id:  # Now student is an instance of Student
             return student
     raise HTTPException(status_code=404, detail="Student not found.")
-# Endpoint to fetch maintenance staff data
+
+#Endpoint to fetch maintenance staff data
 @app.get("/maintenance-staff", response_model=List[MaintenanceStaff])
 def get_maintenance_staff():
     try:
-        with open("maintenance_staff.json", "r") as file:
+        with open("Frontend\classwift\maintenance_staff.json", "r") as file:
             data = json.load(file)
             staff_data = data.get("maintenance_staff", [])
             if not staff_data:
                 return {"error": "No maintenance staff data found in the file."}
-        return staff_data
+            return [MaintenanceStaff(**staff) for staff in staff_data]
     except FileNotFoundError:
-        return {"error": "Maintenance staff data file not found. Please check 'maintenance_staff.json'."}
+        raise HTTPException(status_code=404, detail="Maintenance staff data file not found.")
     except json.JSONDecodeError:
-        return {"error": "Failed to parse 'maintenance_staff.json'. Check the file structure."}
-    except Exception as e:
-        return {"error": f"An unexpected error occurred: {str(e)}"}
+        raise HTTPException(status_code=400, detail="Failed to parse maintenance staff data.")
+    
+@app.get("/maintenance/login")
+def login_maintenance_staff(staff_id: str, password: str):
+    staff_members = get_maintenance_staff() 
+    for staff in staff_members:
+        if staff.staff_id == staff_id and staff.password == password:
+            return {"message": "Login successful", "name": staff.name, "staff_id": staff.staff_id}
+    raise HTTPException(status_code=401, detail="Invalid credentials.")

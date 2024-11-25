@@ -4,6 +4,7 @@ class MaintenanceStaff {
   final String department;
   final String phone;
   final String email;
+  final String password;
 
   MaintenanceStaff({
     required this.name,
@@ -11,6 +12,7 @@ class MaintenanceStaff {
     required this.department,
     required this.phone,
     required this.email,
+    required this.password,
   });
 
   factory MaintenanceStaff.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class MaintenanceStaff {
       department: json['department'],
       phone: json['phone'],
       email: json['email'],
+      password: json['password'],
     );
   }
 }
