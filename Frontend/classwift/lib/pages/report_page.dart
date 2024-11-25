@@ -56,7 +56,78 @@ class _ReportPageState extends State<ReportPage> {
     });
   }
 
+  // Future<void> _saveReport() async {
+  //   final reportData = {
+  //     "reportId": _generateReportId(),
+  //     "building": selectedBuilding,
+  //     "floor": selectedFloor,
+  //     "classroomNo": selectedClassNo,
+  //     "date": DateTime.now().toIso8601String().split('T').first,
+  //     "issueType": selectedIssueType,
+  //     "problemDesc": _descriptionController.text,
+  //     "status": "Under maintenance",
+  //     "user_id": 1004
+  //   };
+
+  //   const filePath = 'reports.json';
+  //   final file = File(filePath);
+
+  //   try {
+  //     List<dynamic> reports = [];
+  //     if (await file.exists()) {
+  //       final fileContents = await file.readAsString();
+  //       final jsonData = json.decode(fileContents);
+  //       reports = jsonData['reports'] ?? [];
+  //     }
+
+  //     reports.add(reportData);
+  //     final updatedData = json.encode({"reports": reports});
+  //     await file.writeAsString(updatedData, mode: FileMode.write);
+
+  //     _showFeedbackDialog(true);
+  //   } catch (e) {
+  //     print("Error saving report: $e");
+  //     _showFeedbackDialog(false);
+  //   }
+  // }
+
+  // void _showFeedbackDialog(bool isSuccess) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (context) {
+  //       return FeedbackPopup(
+  //         message: isSuccess
+  //             ? 'Your report has been submitted successfully!'
+  //             : 'There was an error submitting your report. Please try again.',
+  //         isSuccess: isSuccess,
+  //         onClose: () {
+  //           Navigator.of(context).pop();
+  //           if (isSuccess) {
+  //             Navigator.of(context).pushAndRemoveUntil(
+  //               MaterialPageRoute(
+  //                   builder: (context) => const NavigationBarScreen()),
+  //               (route) => false,
+  //             );
+  //           }
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<void> _saveReport() async {
+    // Check for null or empty fields
+    if (selectedBuilding == null ||
+        selectedFloor == null ||
+        selectedClassNo == null ||
+        selectedIssueType == null ||
+        _descriptionController.text.isEmpty) {
+      // Show a dialog or snackbar with an error message
+      _showFeedbackDialog(false, message: 'Please fill in all fields.');
+      return;
+    }
+
     final reportData = {
       "reportId": _generateReportId(),
       "building": selectedBuilding,
@@ -87,19 +158,22 @@ class _ReportPageState extends State<ReportPage> {
       _showFeedbackDialog(true);
     } catch (e) {
       print("Error saving report: $e");
-      _showFeedbackDialog(false);
+      _showFeedbackDialog(false,
+          message:
+              'There was an error submitting your report. Please try again.');
     }
   }
 
-  void _showFeedbackDialog(bool isSuccess) {
+  void _showFeedbackDialog(bool isSuccess, {String? message}) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
         return FeedbackPopup(
-          message: isSuccess
-              ? 'Your report has been submitted successfully!'
-              : 'There was an error submitting your report. Please try again.',
+          message: message ??
+              (isSuccess
+                  ? 'Your report has been submitted successfully!'
+                  : 'There was an error submitting your report. Please try again.'),
           isSuccess: isSuccess,
           onClose: () {
             Navigator.of(context).pop();
@@ -187,9 +261,9 @@ class _ReportPageState extends State<ReportPage> {
                       selectedIssueType = value;
                     });
                   },
-                  items: ['Electrical', 'Broken Projector', 'other'],
+                  items: ['Electrical', 'Cleanliness', 'Technical', 'Other'],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 30),
                 _buildDescriptionField(),
                 const SizedBox(height: 40),
                 ElevatedButton(
@@ -266,7 +340,7 @@ class _ReportPageState extends State<ReportPage> {
             Icon(Icons.attachment),
           ],
         ),
-        const SizedBox(height: 30),
+        const SizedBox(height: 10),
         TextField(
           controller: _descriptionController,
           maxLines: 5,
@@ -283,8 +357,9 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   String _generateReportId() {
-    final random = DateTime.now().millisecondsSinceEpoch.toString();
-    return "ID$random";
+    final random =
+        (100 + (DateTime.now().millisecondsSinceEpoch % 900)).toString();
+    return "REP$random";
   }
 }
 

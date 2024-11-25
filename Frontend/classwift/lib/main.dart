@@ -5,12 +5,14 @@ import 'package:classwift/pages/LogStudent%20.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
+import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/welcome_page.dart';
 import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/history_page.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:classwift/pages/profile_page.dart';
+import 'package:classwift/pages/maintenance_staff_profile.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -23,6 +25,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+<<<<<<< HEAD
       debugShowCheckedModeBanner: false,
       //home: NavigationBarScreen(), // we start from here
       //home: LoginPage(),
@@ -32,5 +35,16 @@ class MainApp extends StatelessWidget {
       //home: AlternativePage(title: ''),
      // home:LogStudent()
     );
+=======
+        debugShowCheckedModeBanner: false,
+        //home: NavigationBarScreen(), // we start from here
+        //home: LoginPage(),
+        home: WelcomePage()
+        //home: MaintenanceMock(),
+        //home: DemoPage(),
+        //home: AlternativePage(title: ''),
+        //home: Maintenanceview()
+        );
+>>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8
   }
 }

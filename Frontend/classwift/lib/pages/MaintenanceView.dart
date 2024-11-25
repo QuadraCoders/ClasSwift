@@ -1,16 +1,23 @@
+import 'package:classwift/models/Report.dart';
+import 'package:classwift/pages/About_us.dart';
+import 'package:classwift/pages/Settings.dart';
+import 'package:classwift/pages/maintenance_staff_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:classwift/pages/login_page.dart';
 import 'package:classwift/pages/contact_page.dart';
+import 'package:classwift/api_service.dart';
+import 'package:classwift/models/report.dart'; // Import the Report model
 
-class MaintenanceMock extends StatefulWidget {
-  const MaintenanceMock({super.key});
+class Maintenanceview extends StatefulWidget {
+  const Maintenanceview({super.key});
 
   @override
-  State<MaintenanceMock> createState() => _MaintenanceMockState();
+  State<Maintenanceview> createState() => _Maintenanceview();
 }
 
-class _MaintenanceMockState extends State<MaintenanceMock> {
+class _Maintenanceview extends State<Maintenanceview> {
   List<String> reportIDs = [];
+  int currentIndex = 0;
   Map<String, String> reportDetails = {};
   List<String> archivedReports = []; // Store archived reports
   String? expandedReportID;
@@ -25,31 +32,41 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
     _loadReports();
   }
 
-  // Mock function to simulate reading from a file or backend
+  // Load reports from the API
   Future<void> _loadReports() async {
-    // Simulate a network delay
-    await Future.delayed(Duration(seconds: 2));
+    try {
+      setState(() {
+        isLoading = true;
+      });
 
-    // Simulated report data
-    reportIDs = ['1020', '1021', '1022', '1023', '1024'];
-    reportDetails = {
-      '1020': 'Projector not working in Room 105.',
-      '1021': 'Cold class conditions in Building B.',
-      '1022': 'Computer not working in Lab 201.',
-      '1023': 'RORO & TATA being distractive of beauty; need to change class.',
-      '1024': 'Light bulb out in Room 102.',
-    };
+      // Fetch reports using ApiService
+      ApiService apiService = ApiService();
+      var reports = await apiService.fetchReports();
 
-    setState(() {
-      isLoading = false; // Loading finished
-    });
+      // Map the fetched reports into the required format
+      setState(() {
+        reportIDs = reports.map((report) => report.reportId).toList();
+        reportDetails = {
+          for (var report in reports) report.reportId: report.problemDesc,
+        };
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch reports: $e')),
+      );
+    }
   }
 
   void _archiveReport(String reportID) {
     setState(() {
       archivedReports.add(reportID);
       reportIDs.remove(reportID);
-      reportInProgress[reportID] = false; // Initially, it will not be in progress
+      reportInProgress[reportID] =
+          false; // Initially, it will not be in progress
     });
   }
 
@@ -70,7 +87,8 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          expandedReportID = isExpanded ? null : reportID; // Collapse if already expanded
+          expandedReportID =
+              isExpanded ? null : reportID; // Collapse if already expanded
         });
       },
       child: Container(
@@ -107,7 +125,8 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFB2E6B2), // Pastel green for "Fixed"
+                      backgroundColor:
+                          Color(0xFFB2E6B2), // Pastel green for "Fixed"
                       foregroundColor: Colors.black,
                     ),
                     onPressed: () => _archiveReport(reportID),
@@ -116,11 +135,13 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
                   SizedBox(width: 10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFFFFC6C6), // Pastel red for "In Progress"
+                      backgroundColor:
+                          Color(0xFFFFC6C6), // Pastel red for "In Progress"
                       foregroundColor: Colors.black,
                     ),
                     onPressed: () {
-                      _setInProgress(reportID); // Set in progress when button pressed
+                      _setInProgress(
+                          reportID); // Set in progress when button pressed
                     },
                     child: Text('In Progress'),
                   ),
@@ -169,7 +190,10 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
           children: [
             Text(
               'Archived Report #$reportID',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             if (isExpanded) ...[
               SizedBox(height: 5),
@@ -188,6 +212,27 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
+        unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
+        currentIndex: currentIndex,
+        onTap: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+          if (currentIndex == 1) {
+            // Navigate to ProfilePage when profile icon is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => maintenace_profile()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
+        ],
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -219,7 +264,9 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
                   color: Color.fromARGB(255, 121, 89, 178)),
               title: Text('Settings'),
               onTap: () {
-                // Action for Settings
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SettingsPage();
+                }));
               },
             ),
             ListTile(
@@ -228,7 +275,7 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
               title: Text('About us'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return MaintenanceMock();
+                  return about_us();
                 }));
               },
             ),
@@ -265,7 +312,8 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
           ),
           SafeArea(
             child: isLoading
-                ? Center(child: CircularProgressIndicator()) // Show loading spinner
+                ? Center(
+                    child: CircularProgressIndicator()) // Show loading spinner
                 : SingleChildScrollView(
                     child: Column(
                       children: [
@@ -293,7 +341,8 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
                         ),
                         SizedBox(height: 5),
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30, vertical: 30),
                           child: Container(
                             alignment: Alignment.bottomLeft,
                             child: Column(
@@ -302,12 +351,14 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
                                 Text(
                                   'Hello,',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 18),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
                                 ),
                                 Text(
                                   'Hulk',
                                   style: TextStyle(
-                                      fontWeight: FontWeight.bold, fontSize: 24),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24),
                                 ),
                               ],
                             ),
@@ -375,7 +426,8 @@ class _MaintenanceMockState extends State<MaintenanceMock> {
 
                         // Archived Reports Section
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 25.0, vertical: 15),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
