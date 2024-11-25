@@ -16,6 +16,7 @@ import 'package:classwift/pages/login_page.dart';
 import 'package:classwift/pages/profile_page.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/Availability_Page.dart';
+import 'package:classwift/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -33,7 +34,9 @@ class FacultyView extends StatefulWidget {
 class _HomePageState extends State<FacultyView> {
   List<Report> reports = [];
   bool isLoading = true;
-  final ApiService _apiService = ApiService(); // Initialize ApiService
+  final ApiService _apiService = ApiService();
+  List screens = [const FacultyView(), ProfilePage()];
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -61,6 +64,27 @@ class _HomePageState extends State<FacultyView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
+        unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
+        currentIndex: currentIndex,
+        onTap: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+          if (currentIndex == 1) {
+            // Navigate to ProfilePage when profile icon is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
+        ],
+      ),
       drawer: Drawer(
         //backgroundColor: Colors.white60,
         child: ListView(
@@ -127,7 +151,7 @@ class _HomePageState extends State<FacultyView> {
               title: Text('Exit'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LoginPage();
+                  return WelcomePage();
                 }));
               },
             ),
@@ -253,7 +277,7 @@ class _HomePageState extends State<FacultyView> {
                           ),
                         ),
                         Text(
-                          'See all',
+                          '',
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -306,14 +330,14 @@ class _HomePageState extends State<FacultyView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Events',
+                          'Current Selected Class',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
                         ),
                         Text(
-                          'See all',
+                          '',
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -327,24 +351,9 @@ class _HomePageState extends State<FacultyView> {
                   // Horizontal ListView for Events
                   Padding(
                     padding: EdgeInsets.only(left: 15),
-                    child: SizedBox(
-                      height: 250, // Set height for horizontal ListView
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: [
-                          EventCard(
-                              eventImagePath: 'lib/assets/some-event.png',
-                              eventOrganizer: 'GDGUJ',
-                              eventDesc:
-                                  'some workshop by the google developer group(s?)'),
-                          EventCard(
-                              eventImagePath: 'lib/assets/game-event.png',
-                              eventOrganizer: 'GDGUJ',
-                              eventDesc:
-                                  'some workshop by the google developer group(s?)'),
-                        ],
-                      ),
-                    ),
+                    child: Card(
+                        //here display class info
+                        ),
                   ),
 
                   SizedBox(height: 25),

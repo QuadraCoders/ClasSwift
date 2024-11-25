@@ -25,6 +25,20 @@ class ApiService {
     }
   }
 
+// Future<Map<String, dynamic>> fetchBuildingData() async {
+//   try {
+//     final response = await http.get(Uri.parse("$baseUrl/building"));
+//     if (response.statusCode == 200) {
+//       final Map<String, dynamic> data = json.decode(response.body);
+//       return data;
+//     } else {
+//       throw Exception('Failed to load building data: ${response.statusCode}');
+//     }
+//   } catch (e) {
+//     throw Exception('Error fetching building data: $e');
+//   }
+// }
+
   Future<void> updateClassroomAvailability(
       int classroomNo, bool isAvailable) async {
     try {
@@ -66,7 +80,6 @@ class ApiService {
     }
   }
 
-<<<<<<< HEAD
   Future<List<Student>> fetchStudents() async {
     final response = await http.get(Uri.parse('$baseUrl/students'));
 
@@ -88,7 +101,6 @@ class ApiService {
   }
 }
 
-=======
  // New method to fetch maintenance staff data
   Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
     final response = await http.get(Uri.parse('$baseUrl/maintenance-staff'));
@@ -101,5 +113,4 @@ class ApiService {
       throw Exception('Failed to load maintenance staff data');
     }
   }
->>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8
 }

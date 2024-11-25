@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'dart:convert';
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/api_service.dart';
@@ -274,7 +276,7 @@ class _HomePageState extends State<StudentView> {
                           ),
                         ),
                         Text(
-                          'See all',
+                          '',
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -334,7 +336,7 @@ class _HomePageState extends State<StudentView> {
                           ),
                         ),
                         Text(
-                          'See all',
+                          '',
                           style: TextStyle(
                             fontSize: 14,
                           ),
@@ -354,15 +356,25 @@ class _HomePageState extends State<StudentView> {
                         scrollDirection: Axis.horizontal,
                         children: [
                           EventCard(
+                              eventImagePath: 'lib/assets/event3.jpg',
+                              eventOrganizer: 'GDGUJ',
+                              eventDesc: 'a workshop'),
+                          EventCard(
                               eventImagePath: 'lib/assets/some-event.png',
                               eventOrganizer: 'GDGUJ',
-                              eventDesc:
-                                  'some workshop by the google developer group(s?)'),
+                              eventDesc: 'a workshop'),
                           EventCard(
                               eventImagePath: 'lib/assets/game-event.png',
                               eventOrganizer: 'GDGUJ',
-                              eventDesc:
-                                  'some workshop by the google developer group(s?)'),
+                              eventDesc: 'a workshop'),
+                          EventCard(
+                              eventImagePath: 'lib/assets/event2.jpg',
+                              eventOrganizer: 'Drone Club',
+                              eventDesc: 'presentation'),
+                          EventCard(
+                              eventImagePath: 'lib/assets/event4.jpg',
+                              eventOrganizer: 'SWE Club',
+                              eventDesc: 'a workshop'),
                         ],
                       ),
                     ),

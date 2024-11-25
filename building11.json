@@ -49,10 +49,10 @@
         {
             "classroomNo": 105,
             "floor": 1,
-            "capacity": 40,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "50 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 106,
@@ -73,10 +73,10 @@
         {
             "classroomNo": 108,
             "floor": 1,
-            "capacity": 35,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "80 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 109,
@@ -176,11 +176,11 @@
         },
         {
             "classroomNo": 200,
-            "floor": 2,
-            "capacity": 20,
-            "isAvailable": true,
-            "isALab": true,
-            "duration": "80 mins"
+            "floor": 1,
+            "capacity": 30,
+            "isAvailable": false,
+            "isALab": false,
+            "duration": "1hr"
         },
         {
             "classroomNo": 201,
@@ -248,11 +248,11 @@
         },
         {
             "classroomNo": 209,
-            "floor": 2,
-            "capacity": 35,
-            "isAvailable": true,
-            "isALab": true,
-            "duration": "50 mins"
+            "floor": 1,
+            "capacity": 30,
+            "isAvailable": false,
+            "isALab": false,
+            "duration": "1hr"
         },
         {
             "classroomNo": 210,
@@ -280,11 +280,11 @@
         },
         {
             "classroomNo": 213,
-            "floor": 2,
+            "floor": 1,
             "capacity": 30,
-            "isAvailable": true,
-            "isALab": true,
-            "duration": "50 mins"
+            "isAvailable": false,
+            "isALab": false,
+            "duration": "1hr"
         },
         {
             "classroomNo": 214,
@@ -296,11 +296,11 @@
         },
         {
             "classroomNo": 215,
-            "floor": 2,
-            "capacity": 35,
-            "isAvailable": true,
+            "floor": 1,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "50 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 216,
@@ -456,11 +456,11 @@
         },
         {
             "classroomNo": 314,
-            "floor": 3,
+            "floor": 1,
             "capacity": 30,
-            "isAvailable": true,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "80 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 315,

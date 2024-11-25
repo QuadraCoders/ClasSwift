@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:classwift/api_service.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
+import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
 class ReportPage extends StatefulWidget {
@@ -179,8 +180,7 @@ class _ReportPageState extends State<ReportPage> {
             Navigator.of(context).pop();
             if (isSuccess) {
               Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(
-                    builder: (context) => const NavigationBarScreen()),
+                MaterialPageRoute(builder: (context) => const StudentView()),
                 (route) => false,
               );
             }

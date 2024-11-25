@@ -25,26 +25,15 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-<<<<<<< HEAD
       debugShowCheckedModeBanner: false,
       //home: NavigationBarScreen(), // we start from here
       //home: LoginPage(),
       home: WelcomePage(),
+      //home: StudentView(),
       //home: MaintenanceMock(),
       //home: DemoPage(),
       //home: AlternativePage(title: ''),
-     // home:LogStudent()
+      // home:LogStudent()
     );
-=======
-        debugShowCheckedModeBanner: false,
-        //home: NavigationBarScreen(), // we start from here
-        //home: LoginPage(),
-        home: WelcomePage()
-        //home: MaintenanceMock(),
-        //home: DemoPage(),
-        //home: AlternativePage(title: ''),
-        //home: Maintenanceview()
-        );
->>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8
   }
 }
