@@ -31,7 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
             // Navigate to ProfilePage when profile icon is tapped
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => DemoPage()),
+              MaterialPageRoute(builder: (context) => StudentView()),
             );
           }
         },

@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
 import 'dart:convert';
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/api_service.dart';
@@ -15,6 +13,7 @@ import 'package:classwift/pages/login_page.dart';
 import 'package:classwift/pages/profile_page.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/Availability_Page.dart';
+import 'package:classwift/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -33,6 +32,8 @@ class _HomePageState extends State<StudentView> {
   List<Report> reports = [];
   bool isLoading = true;
   final ApiService _apiService = ApiService(); // Initialize ApiService
+  List screens = [const StudentView(), ProfilePage()];
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -60,6 +61,27 @@ class _HomePageState extends State<StudentView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
+        unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
+        currentIndex: currentIndex,
+        onTap: (value) {
+          setState(() {
+            currentIndex = value;
+          });
+          if (currentIndex == 1) {
+            // Navigate to ProfilePage when profile icon is tapped
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfilePage()),
+            );
+          }
+        },
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
+        ],
+      ),
       drawer: Drawer(
         //backgroundColor: Colors.white60,
         child: ListView(
@@ -126,7 +148,7 @@ class _HomePageState extends State<StudentView> {
               title: Text('Exit'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LoginPage();
+                  return WelcomePage();
                 }));
               },
             ),

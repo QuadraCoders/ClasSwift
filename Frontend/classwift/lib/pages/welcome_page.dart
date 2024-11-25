@@ -1,4 +1,5 @@
 import 'package:classwift/pages/Demo.dart';
+import 'package:classwift/pages/LogStudent%20.dart';
 import 'package:classwift/pages/MaintenanceMock.dart';
 import 'package:classwift/pages/faculty_view.dart';
 import 'package:classwift/pages/student_view.dart';
@@ -72,7 +73,7 @@ class _WelcomePageState extends State<WelcomePage>
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _buildCircleButton(
-                      context, "Student", Icons.school, DemoPage()),
+                      context, "Student", Icons.school, LogStudent()),
                   _buildCircleButton(
                       context, "Faculty", Icons.person, FacultyView()),
                   _buildCircleButton(

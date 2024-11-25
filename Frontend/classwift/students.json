@@ -1,0 +1,40 @@
+{
+    "students": [
+      {
+        "name": "Rawan Tallha",
+        "student_id": 2211116,
+        "major": "Software Engineering",
+        "college": "computer science",
+        "email": "2211116@uj.edu.sa",  
+        "phoneNo": "966566838361",
+        "password": "Aa14496"
+      },
+      {
+        "name": "Rital Shilli",
+        "student_id": 2213116,
+        "major": "Software Engineering",
+        "college": "computer science",
+        "email": "2213116@uj.edu.sa",  
+        "phoneNo": "966543111370",
+        "password": "Aa13423"
+      },
+      {
+        "name": "Lana Alhaddad",
+        "student_id": 2213182,
+        "major": "Software Engineering",
+        "college": "computer science",
+        "email": "2213182@uj.edu.sa",  
+        "phoneNo": "966543174609",
+        "password": "Aa13161"
+      },
+      {
+        "name": "Hams Assiri",
+        "student_id": 2213778,
+        "major": "Software Engineering",
+        "college": "computer science",
+        "email": "2213778@uj.edu.sa",  
+        "phoneNo": "966544987678",
+        "password": "Aa13333"
+      }
+    ]
+  }

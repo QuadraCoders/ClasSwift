@@ -1,6 +1,7 @@
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Availability_Page.dart';
 import 'package:classwift/pages/Demo.dart';
+import 'package:classwift/pages/LogStudent%20.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
@@ -29,6 +30,7 @@ class MainApp extends StatelessWidget {
       //home: MaintenanceMock(),
       //home: DemoPage(),
       //home: AlternativePage(title: ''),
+     // home:LogStudent()
     );
   }
 }

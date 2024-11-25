@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:classwift/models/Report.dart';
+import 'package:classwift/models/Student.dart';
 import 'package:http/http.dart' as http;
 import 'models/building.dart';
 
@@ -27,4 +28,26 @@ class ApiService {
       throw Exception('Failed to load reports');
     }
   }
+
+  Future<List<Student>> fetchStudents() async {
+    final response = await http.get(Uri.parse('$baseUrl/students'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => Student.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load students: ${response.body}');
+    }
+  }
+
+  Future<Student> fetchStudentById(int studentId) async {
+  final response = await http.get(Uri.parse('$baseUrl/students/$studentId'));
+  
+  if (response.statusCode == 200) {
+    return Student.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Student not found.');
+  }
+}
+
 }
