@@ -4,6 +4,7 @@ import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
+import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/welcome_page.dart';
 import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';

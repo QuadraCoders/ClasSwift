@@ -2,8 +2,9 @@ class Classroom {
   final int classroomNo;
   final int floor;
   final int capacity;
- bool isAvailable;
+  bool isAvailable;
   final bool isALab;
+  final String duration;
 
   Classroom({
     required this.classroomNo,
@@ -11,6 +12,7 @@ class Classroom {
     required this.capacity,
     required this.isAvailable,
     required this.isALab,
+    required this.duration,
   });
 
   factory Classroom.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,18 @@ class Classroom {
       capacity: json['capacity'],
       isAvailable: json['isAvailable'],
       isALab: json['isALab'],
+      duration: json['duration'],
     );
+  }
+
+   Map<String, dynamic> toJson() {
+    return {
+      'classroomNo': classroomNo,
+      'floor': floor,
+      'capacity': capacity,
+      'isAvailable': isAvailable,
+      'isALab': isALab,
+      'duration': duration,
+    };
   }
 }
