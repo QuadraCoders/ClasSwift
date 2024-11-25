@@ -4,6 +4,7 @@ import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
+import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/welcome_page.dart';
 import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
@@ -23,12 +24,13 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      //home: NavigationBarScreen(), // we start from here
+      home: NavigationBarScreen(), // we start from here
       //home: LoginPage(),
-      home: WelcomePage(),
+      //home: WelcomePage(),
       //home: MaintenanceMock(),
       //home: DemoPage(),
       //home: AlternativePage(title: ''),
+      //home: ReportPage(),
     );
   }
 }

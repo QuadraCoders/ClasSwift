@@ -77,8 +77,8 @@ class _DemoPageState extends State<AlternativePage> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // Adjust the number of columns
-                          crossAxisSpacing: 12.0,
-                          mainAxisSpacing: 12.0,
+                          crossAxisSpacing: 6.0,
+                          mainAxisSpacing: 6.0,
                         ),
                         // Convert classrooms into widgets using `.map()`
                         children: availableClassrooms.map((classroom) {
@@ -96,102 +96,6 @@ class _DemoPageState extends State<AlternativePage> {
     );
   }
 
-//   Widget buildClassBox(Classroom classroom) {
-//     Color color = classroom.isALab
-//         ? const Color.fromARGB(255, 126, 181, 248)
-//         : const Color(0xFFD0F0C0);
-
-//     return Container(
-//       width: 160, // Fixed width
-//       height: 180, // Fixed height
-//       child: Card(
-//         elevation: 2,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(12.0),
-//         ),
-//         color: color.withOpacity(0.8),
-//         child: Padding(
-//           padding: const EdgeInsets.all(16.0), // Padding inside the card
-//           child: Column(
-//             crossAxisAlignment: CrossAxisAlignment.start,
-//             children: [
-//               Container(
-//                 decoration: BoxDecoration(
-//                   color: classroom.isALab ? Colors.blue : Colors.green,
-//                   borderRadius: BorderRadius.circular(4),
-//                 ),
-//                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-//                 child: Text(
-//                   classroom.isALab ? 'Lab' : 'Class',
-//                   style: const TextStyle(
-//                     color: Colors.white,
-//                     fontWeight: FontWeight.bold,
-//                     fontSize: 12,
-//                   ),
-//                 ),
-//               ),
-//               const SizedBox(height: 12), // Space between label and title
-//               Text(
-//                 'Classroom No: ${classroom.classroomNo}',
-//                 style: const TextStyle(
-//                   fontSize: 20,
-//                   fontWeight: FontWeight.bold,
-//                   color: Colors.black,
-//                 ),
-//               ),
-//               const SizedBox(height: 10), // Space between title and details
-
-//               Padding(
-//                 padding: const EdgeInsets.all(4.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     const Text(
-//                       'Floor',
-//                       style: TextStyle(fontWeight: FontWeight.bold),
-//                     ),
-//                     Text(classroom.floor.toString()),
-//                   ],
-//                 ),
-//               ),
-//               Padding(
-//                 padding: const EdgeInsets.all(4.0),
-//                 child: Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     const Text(
-//                       'Capacity',
-//                       style: TextStyle(fontWeight: FontWeight.bold),
-//                     ),
-//                     Text(classroom.capacity.toString()),
-//                   ],
-//                 ),
-//               ),
-
-//               const SizedBox(height: 20),
-//               Center(
-//                 child: ElevatedButton(
-//                   onPressed: () {},
-//                   style: ElevatedButton.styleFrom(
-//                     padding: const EdgeInsets.symmetric(
-//                         horizontal: 15, vertical: 15),
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(15),
-//                     ),
-//                     backgroundColor: Color.fromARGB(255, 255, 255, 250),
-//                   ),
-//                   child: const Text(
-//                     'Select class',
-//                     style: TextStyle(color: Colors.black, fontSize: 16),
-//                   ),
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//  }
   Widget buildClassBox(Classroom classroom) {
     Color color = classroom.isALab
         ? const Color.fromARGB(255, 126, 181, 248)
@@ -199,7 +103,7 @@ class _DemoPageState extends State<AlternativePage> {
 
     return Container(
       width: 160, // Fixed width
-      height: 180, // Fixed height
+      height: 200, // Fixed height
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
@@ -207,7 +111,7 @@ class _DemoPageState extends State<AlternativePage> {
         ),
         color: color.withOpacity(0.8),
         child: Padding(
-          padding: const EdgeInsets.all(16.0), // Padding inside the card
+          padding: const EdgeInsets.all(10.0), // Padding inside the card
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -230,13 +134,25 @@ class _DemoPageState extends State<AlternativePage> {
               Text(
                 'Classroom No: ${classroom.classroomNo}',
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
               const SizedBox(height: 10), // Space between title and details
-
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Duration',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(classroom.duration.toString()),
+                  ],
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Row(
@@ -263,8 +179,7 @@ class _DemoPageState extends State<AlternativePage> {
                   ],
                 ),
               ),
-
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
@@ -288,8 +203,6 @@ class _DemoPageState extends State<AlternativePage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
