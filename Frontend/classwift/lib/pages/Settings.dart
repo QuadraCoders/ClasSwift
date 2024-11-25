@@ -45,10 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => NavigationBarScreen()),
-            ); // Navigate back to HomePage
+            Navigator.pop(context);
           },
         ),
       ),

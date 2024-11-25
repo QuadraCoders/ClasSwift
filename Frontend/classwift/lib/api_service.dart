@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:async'; // For timeout
 import 'package:classwift/models/Report.dart';
+import 'package:classwift/models/Student.dart';
 import 'package:http/http.dart' as http;
 import 'models/building.dart';
+import 'models/maintenace_staff.dart';
 
 class ApiService {
   static const String baseUrl = "http://127.0.0.1:8000";
@@ -53,20 +55,51 @@ class ApiService {
   }
 
   Future<List<Report>> fetchReports() async {
-    try {
-      final response = await http
-          .get(Uri.parse('$baseUrl/reports'))
-          .timeout(const Duration(seconds: 10));
+    final response = await http.get(Uri.parse('$baseUrl/reports'));
 
-      if (response.statusCode == 200) {
-        List<dynamic> data = json.decode(response.body);
-        // Convert the response into a list of Report objects
-        return data.map((report) => Report.fromJson(report)).toList();
-      } else {
-        throw Exception('Failed to load reports: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Error fetching reports: $e');
+    if (response.statusCode == 200) {
+      List<dynamic> data = json.decode(response.body);
+      // Convert the response into a list of Report objects
+      return data.map((report) => Report.fromJson(report)).toList();
+    } else {
+      throw Exception('Failed to load reports');
     }
   }
+
+<<<<<<< HEAD
+  Future<List<Student>> fetchStudents() async {
+    final response = await http.get(Uri.parse('$baseUrl/students'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => Student.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load students: ${response.body}');
+    }
+  }
+
+  Future<Student> fetchStudentById(int studentId) async {
+  final response = await http.get(Uri.parse('$baseUrl/students/$studentId'));
+  
+  if (response.statusCode == 200) {
+    return Student.fromJson(json.decode(response.body));
+  } else {
+    throw Exception('Student not found.');
+  }
+}
+
+=======
+ // New method to fetch maintenance staff data
+  Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
+    final response = await http.get(Uri.parse('$baseUrl/maintenance-staff'));
+
+    if (response.statusCode == 200) {
+      // Parse the response body and return a list of MaintenanceStaff objects
+      List<dynamic> data = json.decode(response.body);
+      return data.map((staff) => MaintenanceStaff.fromJson(staff)).toList();
+    } else {
+      throw Exception('Failed to load maintenance staff data');
+    }
+  }
+>>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8
 }

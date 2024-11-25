@@ -1,7 +1,8 @@
 import json
-from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
+from typing import Optional
+from fastapi import FastAPI, HTTPException  # Don't forget to import HTTPException
 
 app = FastAPI()
 
@@ -33,6 +34,22 @@ class Report(BaseModel):
     problemDesc: str
     status: str
     user_id: int
+    
+class MaintenanceStaff(BaseModel):
+    name: str
+    staff_Id: str
+    phone: int
+    email: str
+    department: str  
+
+class Student(BaseModel):
+    name: str
+    student_id: int  # should be spelled as 'student_id' to match the JSON key
+    major: str
+    college: str
+    email: str  # should match the JSON key
+    phoneNo: str
+    password: str  # ensure this matches the JSON key
 
 # Root endpoint
 @app.get("/")
@@ -126,5 +143,49 @@ def add_report(report: Report):
         return {"error": "Reports data file not found. Please check 'reports.json'."}
     except json.JSONDecodeError:
         return {"error": "Failed to parse 'reports.json'. Check the file structure."}
+
+<<<<<<< HEAD
+
+# Endpoint to fetch students data
+from fastapi import HTTPException
+
+@app.get("/students", response_model=List[Student])
+def get_students():
+    try:
+        with open("Frontend/classwift/students.json", "r") as file:
+            student_data = json.load(file)
+            students = [Student(**student) for student in student_data["students"]]  # Convert each dict to Student object
+            return students
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Students data file not found.")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Failed to parse students.json.")
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Students data not available.")
+
+
+@app.get("/students/{student_id}", response_model=Student)
+def get_student(student_id: int):
+    students = get_students()  # Fetch all students
+    for student in students:
+        if student.student_id == student_id:  # Now student is an instance of Student
+            return student
+    raise HTTPException(status_code=404, detail="Student not found.")
+=======
+# Endpoint to fetch maintenance staff data
+@app.get("/maintenance-staff", response_model=List[MaintenanceStaff])
+def get_maintenance_staff():
+    try:
+        with open("maintenance_staff.json", "r") as file:
+            data = json.load(file)
+            staff_data = data.get("maintenance_staff", [])
+            if not staff_data:
+                return {"error": "No maintenance staff data found in the file."}
+        return staff_data
+    except FileNotFoundError:
+        return {"error": "Maintenance staff data file not found. Please check 'maintenance_staff.json'."}
+    except json.JSONDecodeError:
+        return {"error": "Failed to parse 'maintenance_staff.json'. Check the file structure."}
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
+>>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8

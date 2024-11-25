@@ -1,21 +1,19 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'package:classwift/pages/Demo.dart';
-import 'package:classwift/pages/student_view.dart';
+import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:flutter/material.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+
+class maintenace_profile extends StatefulWidget {
+  const maintenace_profile({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<maintenace_profile> createState() => _maintenace_profile();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _maintenace_profile extends State<maintenace_profile> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    List screens = [const StudentView(), ProfilePage()];
+    List screens = [const Maintenanceview(), maintenace_profile()];
     int currentIndex = 1;
 
     return Scaffold(
@@ -31,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
             // Navigate to ProfilePage when profile icon is tapped
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => StudentView()),
+              MaterialPageRoute(builder: (context) => Maintenanceview()),
             );
           }
         },
@@ -104,11 +102,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(height: 40.0), // Space between sections
 
-                  // ID Card Section
-                  _buildIdCard(),
-
-                  const SizedBox(height: 40.0), // Space between sections
-
                   // Profile Settings Section
                   _buildProfileSettings(context),
                 ],
@@ -116,33 +109,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildIdCard() {
-    return Card(
-      elevation: 8.0,
-      shadowColor: Colors.black54,
-      color: const Color.fromARGB(200, 142, 187, 227),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: Image.asset(
-                'lib/assets/uniCard.png', // Ensure the path is correct
-                // width: double.infinity,
-                // height: 265.0,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
