@@ -7,6 +7,8 @@ from fastapi import FastAPI, HTTPException, Body
 app = FastAPI()
 
 # Schemas using FastAPI's BaseModel from the Pydantic library
+# Define schema models
+
 class Classroom(BaseModel):
     classroomNo: int
     floor: int
@@ -52,6 +54,14 @@ class Student(BaseModel):
     email: str  # should match the JSON key
     phoneNo: str
     password: str  # ensure this matches the JSON key
+
+class FacultyMember(BaseModel):
+    name: str
+    phone: str
+    email: str
+    department: str
+    id: int
+    password: str
 
 # Root endpoint
 @app.get("/")
@@ -177,7 +187,7 @@ def get_student(student_id: int):
 @app.get("/maintenance-staff", response_model=List[MaintenanceStaff])
 def get_maintenance_staff():
     try:
-        with open("Frontend\classwift\maintenance_staff.json", "r") as file:
+        with open("Frontend/classwift/maintenance_staff.json", "r") as file:
             data = json.load(file)
             staff_data = data.get("maintenance_staff", [])
             if not staff_data:
@@ -194,4 +204,45 @@ def login_maintenance_staff(staff_id: str, password: str):
     for staff in staff_members:
         if staff.staff_id == staff_id and staff.password == password:
             return {"message": "Login successful", "name": staff.name, "staff_id": staff.staff_id}
+    raise HTTPException(status_code=401, detail="Invalid credentials.")
+
+# Endpoint to fetch faculty data
+@app.get("/faculty", response_model=List[FacultyMember])
+def get_faculty_members():
+    try:
+        with open("Frontend/classwift/faculty_members.json", "r") as file:
+            data = json.load(file)
+            faculty_members = [FacultyMember(**member) for member in data["faculty_members"]]
+            return faculty_members
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Faculty members data file not found.")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Failed to parse faculty members data.")
+    
+# Faculty login endpoint
+@app.get("/faculty", response_model=List[FacultyMember])
+def get_faculty_members():
+    try:
+        with open("Frontend/classwift/faculty_members.json", "r") as file:
+            data = json.load(file)
+            faculty_members = [FacultyMember(**member) for member in data["faculty_members"]]
+            return faculty_members
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Faculty members data file not found.")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Failed to parse faculty members data.")
+    
+# Faculty login endpoint
+@app.get("/faculty/login")
+def login_faculty_member(faculty_id: int, password: str):
+    faculty_members = get_faculty_members()
+
+    for faculty in faculty_members:
+        if faculty.id == faculty_id and faculty.password == password:
+            return {
+                "message": "Login successful",
+                "name": faculty.name,
+                "id": faculty.id
+            }
+
     raise HTTPException(status_code=401, detail="Invalid credentials.")

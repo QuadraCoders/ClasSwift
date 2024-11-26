@@ -5,6 +5,8 @@ import 'package:classwift/models/Student.dart';
 import 'package:http/http.dart' as http;
 import 'models/building.dart';
 import 'package:classwift/models/maintenace_staff.dart'; 
+import 'models/faculty_member.dart'; 
+
 
 class ApiService {
   static const String baseUrl = "http://127.0.0.1:8000";
@@ -121,5 +123,22 @@ class ApiService {
     );
     return staff;
   }
+
+  //Faculty
+ Future<FacultyMember> facultyLogin(int facultyId, String password) async {
+  final response = await http.get(Uri.parse('$baseUrl/faculty/login?faculty_id=$facultyId&password=$password'));
+
+  print('Response status: ${response.statusCode}');
+  print('Response body: ${response.body}'); // Debug line
+
+  if (response.statusCode == 200) {
+    var responseData = json.decode(response.body);
+    print('Parsed Response: $responseData'); // Debug line to see the parsed data
+    return FacultyMember.fromJson(responseData);
+  } else {
+    final errorData = json.decode(response.body);
+    throw Exception('Failed to login: ${errorData['detail']}');
+  }
+}
 }
 
