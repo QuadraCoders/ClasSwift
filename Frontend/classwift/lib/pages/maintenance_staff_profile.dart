@@ -1,7 +1,6 @@
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:flutter/material.dart';
 
-
 class maintenace_profile extends StatefulWidget {
   const maintenace_profile({super.key});
 
@@ -145,11 +144,6 @@ class _maintenace_profile extends State<maintenace_profile> {
                 color: Colors.grey[200],
                 child: _buildListTile(context, Icons.lock, 'Reset Password',
                     ChangePasswordPage()),
-              ),
-              Card(
-                color: Colors.grey[200],
-                child: _buildListTile(context, Icons.notifications,
-                    'Notifications', NotificationSettingsPage()),
               ),
               Card(
                 color: Colors.grey[200],
@@ -406,24 +400,6 @@ class _PasswordResetScreenState extends State<ChangePasswordPage> {
           ),
         ),
       ]),
-    );
-  }
-}
-
-class NotificationSettingsPage extends StatelessWidget {
-  const NotificationSettingsPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notification Settings'),
-        backgroundColor: const Color(0xFF81B2DD),
-      ),
-      body: const Center(
-        child: Text(
-            'Notification Settings Screen - Implement notification settings here'),
-      ),
     );
   }
 }

@@ -44,7 +44,9 @@ class MainApp extends StatelessWidget {
         //home: DemoPage(),
         //home: AlternativePage(title: ''),
         //home: Maintenanceview()
-        //home: FacultyView(),
+        //home: FacultyView()
+        //home: ProfilePage(),
+
         );
   }
 }

@@ -11,6 +11,7 @@ import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
+import 'package:classwift/pages/faculty_profile.dart';
 import 'package:classwift/pages/history_page.dart';
 import 'package:classwift/pages/login_page.dart';
 import 'package:classwift/pages/profile_page.dart';
@@ -76,7 +77,7 @@ class _HomePageState extends State<FacultyView> {
             // Navigate to ProfilePage when profile icon is tapped
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
+              MaterialPageRoute(builder: (context) => FacultyProfile()),
             );
           }
         },
