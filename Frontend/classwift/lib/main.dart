@@ -7,6 +7,7 @@ import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/faculty_view.dart';
 import 'package:classwift/pages/report_page.dart';
+import 'package:classwift/pages/user_provider.dart';
 import 'package:classwift/pages/welcome_page.dart';
 import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
@@ -15,9 +16,18 @@ import 'package:classwift/pages/student_view.dart';
 import 'package:classwift/pages/profile_page.dart';
 import 'package:classwift/pages/maintenance_staff_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+// void main() {
+//   runApp(const MainApp());
+// }
 void main() {
-  runApp(const MainApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {

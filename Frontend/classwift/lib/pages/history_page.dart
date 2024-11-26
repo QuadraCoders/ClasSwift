@@ -52,27 +52,23 @@ class _HomePageState extends State<history_page> {
                 : RefreshIndicator(
                     onRefresh:
                         fetchReports, // Call fetchReports() when user pulls down
-                    child: Padding(
-                      padding: const EdgeInsets.all(1.0),
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of columns
-                        ),
-                        itemCount:
-                            reports.length, // Number of items in the grid
-                        itemBuilder: (context, index) {
-                          Report report = reports[index]; // Get each report
-                          return ReportHistoryCard(
-                            reportID: report.reportId,
-                            reportDate: report.date,
-                            reportBuilding: report.building,
-                            reportFloor: report.floor,
-                            reportRoomNo: report.classroomNo,
-                            reportIssue: report.issueType,
-                            reportDescription: report.problemDesc,
-                          );
-                        },
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Number of columns
                       ),
+                      itemCount: reports.length, // Number of items in the grid
+                      itemBuilder: (context, index) {
+                        Report report = reports[index]; // Get each report
+                        return ReportHistoryCard(
+                          reportID: report.reportId,
+                          reportDate: report.date,
+                          reportBuilding: report.building,
+                          reportFloor: report.floor,
+                          reportRoomNo: report.classroomNo,
+                          reportIssue: report.issueType,
+                          reportDescription: report.problemDesc,
+                        );
+                      },
                     ),
                   ),
       ),

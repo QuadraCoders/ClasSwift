@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:classwift/api_service.dart';
 import 'package:classwift/models/Student.dart';
 import 'package:flutter/material.dart';
@@ -150,7 +152,7 @@ class _LogStudentState extends State<LogStudent> {
                         if (student.password == enteredPassword) {
                           // Navigate to the StudentView if credentials are correct
                           Navigator.push(context, MaterialPageRoute(builder: (context) {
-                            return const StudentView();
+                            return StudentView(userId: student.student_id);
                           }));
                         } else {
                           // Password is incorrect

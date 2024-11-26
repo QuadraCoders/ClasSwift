@@ -304,12 +304,12 @@ class _HomePageState extends State<FacultyView> {
                             pageName: AlternativePage(
                                 title: 'View alternative classes'),
                           ),
-                          ServicesCard(
-                            serviceName: 'Report an issue',
-                            iconImagePath: 'lib/assets/file-edit.png',
-                            pageTitle: 'Reports',
-                            pageName: ReportPage(),
-                          ),
+                          // ServicesCard(
+                          //   serviceName: 'Report an issue',
+                          //   iconImagePath: 'lib/assets/file-edit.png',
+                          //   pageTitle: 'Reports',
+                          //   pageName: ReportPage(),
+                          // ),
                           ServicesCard(
                             serviceName: 'History',
                             iconImagePath: 'lib/assets/time-past.png',
