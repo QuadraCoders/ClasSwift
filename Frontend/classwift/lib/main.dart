@@ -5,6 +5,7 @@ import 'package:classwift/pages/LogStudent%20.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/Settings.dart';
+import 'package:classwift/pages/faculty_view.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/welcome_page.dart';
 import 'package:classwift/pages/alternative_page.dart';
@@ -34,5 +35,7 @@ class MainApp extends StatelessWidget {
         //home: AlternativePage(title: ''),
         //home: Maintenanceview()
       );
+        //home: FacultyView(),
+        );
   }
 }

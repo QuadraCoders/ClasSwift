@@ -1,5 +1,6 @@
 import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/LogStudent%20.dart';
+import 'package:classwift/pages/LogFaculty.dart';
 import 'package:classwift/pages/LogMaintenance.dart';
 import 'package:classwift/pages/LogStudent .dart';
 import 'package:classwift/pages/MaintenanceView.dart';
@@ -77,7 +78,7 @@ class _WelcomePageState extends State<WelcomePage>
                   _buildCircleButton(
                       context, "Student", Icons.school, LogStudent()),
                   _buildCircleButton(
-                      context, "Faculty", Icons.person, FacultyView()),
+                      context, "Faculty", Icons.person, LogFaculty()),
                   _buildCircleButton(
                       context, "Maintenance", Icons.build, LogMaintenance()),
                 ],

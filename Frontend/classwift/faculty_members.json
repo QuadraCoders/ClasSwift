@@ -1,36 +1,36 @@
 {
     "faculty_members": [
         {
-            "name": "tony stark",
+            "name": "Najlaa Alharbi",
             "phone": "966543111380",
-            "email": "tony.stark@example.com",
+            "email": "N.Alharbi@example.com",
             "department": "Electrical Engineering",
             "id": 1001,
-            "Password": "Aa17659"
+            "password": "Aa17659"
         },
         {
-            "name": "bruce banner",
+            "name": "Waad Alsubhi",
             "phone": "966543548762",
-            "email": "bruce.banner@example.com",
+            "email": "Waad.A.A@example.com",
             "department": "Computer science",
             "id": 1002,
-            "Password": "Aa19346"
+            "password": "Aa19346"
         },
         {
-            "name": "steve rogers",
+            "name": "Salma Aldawsary",
             "phone": "9661639726790",
-            "email": "steve rogers@example.com",
+            "email": "Salolo@example.com",
             "department": "Physics",
             "id": 1003,
-            "Password": "Aa13475"
+            "password": "Aa13475"
         },
         {
-            "name": "wanda maximoff",
+            "name": "Bushra Khayat",
             "phone": "966253476890",
-            "email": "wanda.maximoff@example.com",
+            "email": "BushraKhayat@example.com",
             "department": "Biology",
             "id": 1004,
-            "Password": "Aa10980"
+            "password": "Aa10980"
         }
     ]
 }
