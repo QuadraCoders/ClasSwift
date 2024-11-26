@@ -146,7 +146,6 @@ def add_report(report: Report):
     except json.JSONDecodeError:
         return {"error": "Failed to parse 'reports.json'. Check the file structure."}
 
-<<<<<<< HEAD
 
 # Endpoint to fetch students data
 from fastapi import HTTPException
@@ -173,7 +172,6 @@ def get_student(student_id: int):
         if student.student_id == student_id:  # Now student is an instance of Student
             return student
     raise HTTPException(status_code=404, detail="Student not found.")
-=======
 # Endpoint to fetch maintenance staff data
 @app.get("/maintenance-staff", response_model=List[MaintenanceStaff])
 def get_maintenance_staff():
@@ -190,4 +188,3 @@ def get_maintenance_staff():
         return {"error": "Failed to parse 'maintenance_staff.json'. Check the file structure."}
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
->>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8

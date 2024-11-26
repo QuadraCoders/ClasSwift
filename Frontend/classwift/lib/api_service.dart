@@ -110,7 +110,6 @@ class ApiService {
     }
   }
 
-<<<<<<< HEAD
   Future<List<Student>> fetchStudents() async {
     final response = await http.get(Uri.parse('$baseUrl/students'));
 
@@ -132,7 +131,6 @@ class ApiService {
   }
 }
 
-=======
  // New method to fetch maintenance staff data
   Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
     final response = await http.get(Uri.parse('$baseUrl/maintenance-staff'));
@@ -145,5 +143,4 @@ class ApiService {
       throw Exception('Failed to load maintenance staff data');
     }
   }
->>>>>>> fc9bf14b70c07cef56efbccaa6bb696efd19abe8
 }
