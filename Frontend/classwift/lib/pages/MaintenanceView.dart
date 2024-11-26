@@ -2,6 +2,7 @@ import 'package:classwift/models/Report.dart';
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/maintenance_staff_profile.dart';
+import 'package:classwift/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
 import 'package:classwift/pages/login_page.dart';
 import 'package:classwift/pages/contact_page.dart';
@@ -295,7 +296,7 @@ class _Maintenanceview extends State<Maintenanceview> {
               title: Text('Exit'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return LoginPage();
+                  return WelcomePage();
                 }));
               },
             ),

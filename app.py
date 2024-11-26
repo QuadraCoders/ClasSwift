@@ -2,7 +2,7 @@ import json
 from pydantic import BaseModel
 from typing import List
 from typing import Optional
-from fastapi import FastAPI, HTTPException  # Don't forget to import HTTPException
+from fastapi import FastAPI, HTTPException, Body
 
 app = FastAPI()
 
@@ -37,10 +37,12 @@ class Report(BaseModel):
     
 class MaintenanceStaff(BaseModel):
     name: str
-    staff_Id: str
-    phone: int
+    staff_id: str
+    department: str
+    phone: str
     email: str
-    department: str  
+    password: str
+  
 
 class Student(BaseModel):
     name: str
@@ -74,30 +76,28 @@ def get_classrooms():
     try:
         with open("building11.json", "r") as file:
             building_data = json.load(file)
-            print("Classrooms Data:", building_data["classrooms"])  # Debug here
-            return building_data["classrooms"]
+        return building_data.get("classrooms", [])
     except Exception as e:
-        print("Error:", e)
-        return {"error": str(e)}
+        return {"error": f"Error reading classroom data: {str(e)}"}
 
+# Simplified Endpoint to update classroom availability or other data
 @app.put("/classrooms/{classroom_no}")
 def update_classroom(classroom_no: int, updated_classroom: Classroom):
-    """
-    Updates the availability and other details of a specific classroom in the JSON file.
-    """
     try:
         # Load the building data from the JSON file
         with open("building11.json", "r") as file:
             building_data = json.load(file)
         
-        # Find the classroom with the matching number
         classrooms = building_data.get("classrooms", [])
+        updated = False
+        
         for idx, classroom in enumerate(classrooms):
             if classroom["classroomNo"] == classroom_no:
-                # Update the classroom with the new data
-                classrooms[idx] = updated_classroom.dict()
+                classrooms[idx] = updated_classroom.dict()  # Update the classroom
+                updated = True
                 break
-        else:
+        
+        if not updated:
             return {"error": f"Classroom with number {classroom_no} not found."}
         
         # Save the updated data back to the JSON file
@@ -105,13 +105,13 @@ def update_classroom(classroom_no: int, updated_classroom: Classroom):
             json.dump(building_data, file, indent=4)
         
         return {"message": f"Classroom {classroom_no} updated successfully!"}
+    
     except FileNotFoundError:
         return {"error": "Building data file not found. Please check 'building11.json'."}
     except json.JSONDecodeError:
         return {"error": "Failed to parse 'building11.json'. Check the file structure."}
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
-
 
 # Endpoint to fetch reports data
 @app.get("/reports", response_model=List[Report])
@@ -130,7 +130,7 @@ def get_reports():
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
 
-
+# Endpoint to add a report
 @app.post("/reports")
 def add_report(report: Report):
     try:
@@ -172,19 +172,26 @@ def get_student(student_id: int):
         if student.student_id == student_id:  # Now student is an instance of Student
             return student
     raise HTTPException(status_code=404, detail="Student not found.")
-# Endpoint to fetch maintenance staff data
+
+#Endpoint to fetch maintenance staff data
 @app.get("/maintenance-staff", response_model=List[MaintenanceStaff])
 def get_maintenance_staff():
     try:
-        with open("maintenance_staff.json", "r") as file:
+        with open("Frontend\classwift\maintenance_staff.json", "r") as file:
             data = json.load(file)
             staff_data = data.get("maintenance_staff", [])
             if not staff_data:
                 return {"error": "No maintenance staff data found in the file."}
-        return staff_data
+            return [MaintenanceStaff(**staff) for staff in staff_data]
     except FileNotFoundError:
-        return {"error": "Maintenance staff data file not found. Please check 'maintenance_staff.json'."}
+        raise HTTPException(status_code=404, detail="Maintenance staff data file not found.")
     except json.JSONDecodeError:
-        return {"error": "Failed to parse 'maintenance_staff.json'. Check the file structure."}
-    except Exception as e:
-        return {"error": f"An unexpected error occurred: {str(e)}"}
+        raise HTTPException(status_code=400, detail="Failed to parse maintenance staff data.")
+    
+@app.get("/maintenance/login")
+def login_maintenance_staff(staff_id: str, password: str):
+    staff_members = get_maintenance_staff() 
+    for staff in staff_members:
+        if staff.staff_id == staff_id and staff.password == password:
+            return {"message": "Login successful", "name": staff.name, "staff_id": staff.staff_id}
+    raise HTTPException(status_code=401, detail="Invalid credentials.")

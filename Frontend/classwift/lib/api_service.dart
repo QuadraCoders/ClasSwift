@@ -1,58 +1,10 @@
-// import 'dart:convert';
-// import 'package:classwift/models/Report.dart';
-// import 'package:http/http.dart' as http;
-// import 'models/building.dart';
-
-// class ApiService {
-//   static const String baseUrl = "http://127.0.0.1:8000";
-
-//   Future<Building> fetchBuildingData() async {
-//     final response = await http.get(Uri.parse('$baseUrl/building'));
-
-//     if (response.statusCode == 200) {
-//       return Building.fromJson(json.decode(response.body));
-//     } else {
-//       throw Exception('Failed to load building data');
-//     }
-//   }
-
-//   Future<void> updateClassroomAvailability(
-//       int classroomNo, bool isAvailable) async {
-//     final response = await http.post(
-//       Uri.parse('$baseUrl/classroom/update'),
-//       headers: <String, String>{
-//         'Content-Type': 'application/json; charset=UTF-8',
-//       },
-//       body: jsonEncode(<String, dynamic>{
-//         'classroomNo': classroomNo,
-//         'isAvailable': isAvailable,
-//       }),
-//     );
-
-//     if (response.statusCode != 200) {
-//       throw Exception('Failed to update classroom availability.');
-//     }
-//   }
-
-//   Future<List<Report>> fetchReports() async {
-//     final response = await http.get(Uri.parse('$baseUrl/reports'));
-
-//     if (response.statusCode == 200) {
-//       List<dynamic> data = json.decode(response.body);
-//       // Convert the response into a list of Report objects
-//       return data.map((report) => Report.fromJson(report)).toList();
-//     } else {
-//       throw Exception('Failed to load reports');
-//     }
-//   }
-// }
 import 'dart:convert';
 import 'dart:async'; // For timeout
 import 'package:classwift/models/Report.dart';
 import 'package:classwift/models/Student.dart';
 import 'package:http/http.dart' as http;
 import 'models/building.dart';
-import 'models/maintenace_staff.dart';
+import 'package:classwift/models/maintenace_staff.dart'; 
 
 class ApiService {
   static const String baseUrl = "http://127.0.0.1:8000";
@@ -73,18 +25,36 @@ class ApiService {
     }
   }
 
+// Future<Map<String, dynamic>> fetchBuildingData() async {
+//   try {
+//     final response = await http.get(Uri.parse("$baseUrl/building"));
+//     if (response.statusCode == 200) {
+//       final Map<String, dynamic> data = json.decode(response.body);
+//       return data;
+//     } else {
+//       throw Exception('Failed to load building data: ${response.statusCode}');
+//     }
+//   } catch (e) {
+//     throw Exception('Error fetching building data: $e');
+//   }
+// }
+
   Future<void> updateClassroomAvailability(
       int classroomNo, bool isAvailable) async {
     try {
       final response = await http
-          .post(
-            Uri.parse('$baseUrl/classroom/update'),
+          .put(
+            Uri.parse('$baseUrl/classrooms/$classroomNo'),
             headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
             },
             body: jsonEncode(<String, dynamic>{
               'classroomNo': classroomNo,
               'isAvailable': isAvailable,
+              'floor': 1, // Example value, adjust as needed
+              'capacity': 30, // Example value, adjust as needed
+              'isALab': false, // Example value, adjust as needed
+              'duration': '1hr', // Example value, adjust as needed
             }),
           )
           .timeout(const Duration(seconds: 10));
@@ -132,15 +102,24 @@ class ApiService {
 }
 
  // New method to fetch maintenance staff data
-  Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
+ Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
     final response = await http.get(Uri.parse('$baseUrl/maintenance-staff'));
 
     if (response.statusCode == 200) {
-      // Parse the response body and return a list of MaintenanceStaff objects
       List<dynamic> data = json.decode(response.body);
       return data.map((staff) => MaintenanceStaff.fromJson(staff)).toList();
     } else {
       throw Exception('Failed to load maintenance staff data');
     }
   }
+
+  Future<MaintenanceStaff> fetchMaintenanceStaffById(String staffId) async {
+    List<MaintenanceStaff> staffMembers = await fetchMaintenanceStaff();
+    final staff = staffMembers.firstWhere(
+      (staff) => staff.staffId == staffId,
+      orElse: () => throw Exception('Staff not found'),
+    );
+    return staff;
+  }
 }
+

@@ -19,7 +19,7 @@ class _DemoPageState extends State<AlternativePage> {
   @override
   void initState() {
     super.initState();
-    // Use the ApiService to fetch classroom data
+    // Fetch building data on initial load
     futureBuilding = apiService.fetchBuildingData();
   }
 
@@ -72,15 +72,13 @@ class _DemoPageState extends State<AlternativePage> {
                     Expanded(
                       // This makes the GridView take the remaining space
                       child: GridView(
-                        physics:
-                            const BouncingScrollPhysics(), // Give it a nice bounce effect
+                        physics: const BouncingScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2, // Adjust the number of columns
                           crossAxisSpacing: 6.0,
                           mainAxisSpacing: 6.0,
                         ),
-                        // Convert classrooms into widgets using `.map()`
                         children: availableClassrooms.map((classroom) {
                           return buildClassBox(classroom);
                         }).toList(),
@@ -111,7 +109,7 @@ class _DemoPageState extends State<AlternativePage> {
         ),
         color: color.withOpacity(0.8),
         child: Padding(
-          padding: const EdgeInsets.all(10.0), // Padding inside the card
+          padding: const EdgeInsets.all(10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -130,7 +128,7 @@ class _DemoPageState extends State<AlternativePage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 12), // Space between label and title
+              const SizedBox(height: 12),
               Text(
                 'Classroom No: ${classroom.classroomNo}',
                 style: const TextStyle(
@@ -139,7 +137,7 @@ class _DemoPageState extends State<AlternativePage> {
                   color: Colors.black,
                 ),
               ),
-              const SizedBox(height: 10), // Space between title and details
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Row(
@@ -182,26 +180,79 @@ class _DemoPageState extends State<AlternativePage> {
               const SizedBox(height: 5),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Show the popup when the button is clicked
-                    showDialog(
+                  onPressed: () async {
+                    // Show confirmation dialog
+                    bool? confirmed = await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return FeedbackPopup(
-                          message:
-                              "You selected Classroom No: ${classroom.classroomNo}",
-                          isSuccess: true,
-                          onClose: () {
-                            // Update the classroom state here
-                            setState(() {
-                              classroom.isAvailable = false;
-                            });
-                            Navigator.of(context).pop(); // Close the dialog
-                          },
+                        return AlertDialog(
+                          title: Text("Confirm Selection"),
+                          content: Text(
+                              "Are you sure you want to select Classroom No: ${classroom.classroomNo}?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text("Confirm"),
+                            ),
+                          ],
                         );
                       },
                     );
+
+                    if (confirmed == true) {
+                      try {
+                        await apiService.updateClassroomAvailability(
+                            classroom.classroomNo, false);
+                        setState(() {
+                          classroom.isAvailable = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "Classroom ${classroom.classroomNo} is now reserved.")),
+                        );
+                      } catch (error) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  "Failed to update classroom availability")),
+                        );
+                      }
+                    }
                   },
+
+                  // onPressed: () {
+                  //   // Show the popup when the button is clicked
+                  //   showDialog(
+                  //     context: context,
+                  //     builder: (BuildContext context) {
+                  //       return FeedbackPopup(
+                  //         message:
+                  //             "You selected Classroom No: ${classroom.classroomNo}",
+                  //         isSuccess: true,
+                  //         onClose: () {
+                  //           // Update the classroom state here
+                  //           setState(() {
+                  //             classroom.isAvailable = false;
+                  //           });
+                  //           // Send the update request to the API
+                  //           apiService.updateClassroomAvailability(
+                  //               classroom.classroomNo, false);
+                  //           // Refetch the data to reflect the change
+                  //           setState(() {
+                  //             futureBuilding = apiService.fetchBuildingData();
+                  //           });
+                  //           Navigator.of(context)
+                  //               .pop(classroom); // Close the dialog
+                  //         },
+                  //       );
+                  //     },
+                  //   );
+                  // },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),

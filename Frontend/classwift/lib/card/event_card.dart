@@ -6,7 +6,8 @@ class EventCard extends StatelessWidget {
   final String eventDesc;
 
 // constructor to change icon and service in every card
-  const EventCard({super.key, 
+  const EventCard({
+    super.key,
     required this.eventImagePath,
     required this.eventOrganizer,
     required this.eventDesc,
@@ -30,19 +31,23 @@ class EventCard extends StatelessWidget {
                 )),
           ),
 
-          const SizedBox(height: 15),
+          const SizedBox(height: 1),
 
           // event organization (bold)
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              eventOrganizer,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              children: [
+                Text(
+                  eventOrganizer,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                // event description
+                Text(eventDesc),
+              ],
             ),
           ),
-
-          // event description
-          //Text(eventDesc),
         ]),
       ),
       //),

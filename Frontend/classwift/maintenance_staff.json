@@ -1,36 +1,36 @@
 {
     "maintenance_staff": [
         {
-            "name": "John Doe",
+            "name": "Jamila Saud",
             "staff_id": "MS001",
             "department": "Maintenance",
             "phone": "9665551234",
-            "email": "john.doe@example.com",
-            "Password": "Aa12244"
+            "email": "J.Saud@example.com",
+            "password": "Aa12244"
         },
         {
-            "name": "Jane Smith",
+            "name": "Samaher Alshehri",
             "staff_id": "MS002",
             "department": "Maintenance",
             "phone": "9665555678",
-            "email": "jane.smith@example.com",
-            "Password": "Aa11176"
+            "email": "Samaher@example.com",
+            "password": "Aa11176"
         },
         {
-            "name": "Alice Johnson",
+            "name": "Anwar Baesia",
             "staff_id": "MS003",
             "department": "Maintenance",
             "phone": "9665559012",
-            "email": "alice.johnson@example.com",
-            "Password": "Aa19955"
+            "email": "Baeisa.Anwar@example.com",
+            "password": "Aa19955"
         },
         {
-            "name": "Bob Brown",
+            "name": "sherien Ossama",
             "staff_id": "MS004",
             "department": "Maintenance",
             "phone": "9665553456",
-            "email": "bob.brown@example.com",
-            "Password": "Aa11103"
+            "email": "SheriOssy@example.com",
+            "password": "Aa11103"
         }
     ]
 }
