@@ -42,7 +42,7 @@ class ApiService {
               'floor': 1, // Example value, adjust as needed
               'capacity': 30, // Example value, adjust as needed
               'isALab': false, // Example value, adjust as needed
-              'duration': '1hr', // Example value, adjust as needed
+              'duration': '50 min', // Example value, adjust as needed
             }),
           )
           .timeout(const Duration(seconds: 10));
