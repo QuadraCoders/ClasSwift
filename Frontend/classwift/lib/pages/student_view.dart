@@ -7,6 +7,7 @@ import 'package:classwift/card/event_card.dart';
 import 'package:classwift/card/report_history_card.dart';
 import 'package:classwift/card/services_card.dart';
 import 'package:classwift/models/Report.dart';
+import 'package:classwift/models/Student.dart';
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/contact_page.dart';
@@ -32,8 +33,15 @@ class StudentView extends StatefulWidget {
 
 class _HomePageState extends State<StudentView> {
   List<Report> reports = [];
+  String studentName = "";
+  String studentMajor = "";
   bool isLoading = true;
   final ApiService _apiService = ApiService(); // Initialize ApiService
+
+  //stroing fetched data
+  String? storedStudentName;
+  String? storedStudentMajor;
+
   List<Widget> screens = [
     StudentView(userId: 1),
     ProfilePage()
@@ -44,6 +52,9 @@ class _HomePageState extends State<StudentView> {
   void initState() {
     super.initState();
     fetchReports();
+    if (widget.userId != null) {
+        fetchStudentData(); // Fetch from the API on initialization
+    }
   }
 
   Future<void> fetchReports() async {
@@ -62,6 +73,35 @@ class _HomePageState extends State<StudentView> {
     }
   }
 
+
+  Future<void> fetchStudentData() async {
+    if (storedStudentName != null && storedStudentMajor != null) {
+      // Use stored data if available
+      setState(() {
+        studentName = storedStudentName!;
+        studentMajor = storedStudentMajor!;
+        isLoading = false; // Stop loading
+      });
+    } else if (widget.userId != null) {
+      // Fetch data from the API if not stored
+      try {
+        Student student = await _apiService.fetchStudentById(widget.userId!);
+        setState(() {
+          storedStudentName = student.name; // Store once fetched
+          storedStudentMajor = student.major; // Store once fetched
+          studentName = student.name;
+          studentMajor = student.major;
+          isLoading = false;
+        });
+      } catch (e) {
+        print('Error fetching student data: $e');
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,7 +116,7 @@ class _HomePageState extends State<StudentView> {
           if (currentIndex == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage()),
+              MaterialPageRoute(builder: (context) => ProfilePage(userId: widget.userId)), // Pass userId here
             );
           }
         },
@@ -191,10 +231,7 @@ class _HomePageState extends State<StudentView> {
                   ),
                   SizedBox(height: 5),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 30),
-                    child: Container(
-                      alignment: Alignment.bottomLeft,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -204,13 +241,12 @@ class _HomePageState extends State<StudentView> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           Text(
-                            'Peter B. Parker', // You can replace this with dynamic user name
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 24),
+                            isLoading ? 'Loading...' : studentName,
+                            style: TextStyle( fontWeight: FontWeight.bold, fontSize: 24),
                           ),
                         ],
                       ),
-                    ),
+                   
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),

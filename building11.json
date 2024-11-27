@@ -81,10 +81,10 @@
         {
             "classroomNo": 109,
             "floor": 1,
-            "capacity": 40,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "50 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 110,

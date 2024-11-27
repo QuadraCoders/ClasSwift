@@ -1,15 +1,49 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+ // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'package:classwift/api_service.dart';
+import 'package:classwift/models/Student.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+    final int? userId;
+    const ProfilePage({Key? key, this.userId}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String studentName = "";
+  String studentMajor = "";
+  int studentId = 0; 
+  String college = ""; 
+  String email = ""; 
+  String phoneNumber = ""; 
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.userId != null) {
+      fetchStudentData(); // Fetch student data as soon as the profile page initializes
+    }
+  }
+  Future<void> fetchStudentData() async {
+    try {
+      Student student = await ApiService().fetchStudentById(widget.userId!);
+      setState(() {
+        studentName = student.name;
+        studentMajor = student.major;
+        studentId = student.student_id; // Assign the student ID
+        college = student.college; // Assign the college
+        email = student.email; // Assign the email
+        phoneNumber = student.phoneNo; // Assign the phone number
+      });
+    } catch (e) {
+      print('Error fetching student data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
@@ -79,10 +113,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(
                       height: 20.0), // Space between picture and name
-                  const Text(
-                    'Peter parker',
-                    textAlign: TextAlign.center, // Center the text
-                    style: TextStyle(
+                  Text(
+                    studentName.isNotEmpty ? studentName : "Loading...",
+                    style: const TextStyle(
                       fontSize: 28.0,
                       fontWeight: FontWeight.bold,
                       color: Color.fromARGB(255, 93, 93, 93),
@@ -91,8 +124,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
                   const SizedBox(
                       height: 10.0), // Space between name and additional info
-                  const Text(
-                    'Software Engineering',
+                   Text(
+                    studentMajor.isNotEmpty ? studentMajor : "Loading...",
                     textAlign: TextAlign.center, // Center the text
                     style: TextStyle(
                       fontSize: 16.0,
@@ -171,7 +204,18 @@ class _ProfilePageState extends State<ProfilePage> {
               Card(
                 color: Colors.grey[200],
                 child: _buildListTile(
-                    context, Icons.person, 'View Profile', ViewProfilePage()),
+                  context, 
+                  Icons.person, 
+                  'View Profile', 
+                  ViewProfilePage(
+                    userName: studentName, // Pass the fetched student name
+                    major: studentMajor, // Pass the fetched student major
+                    studentId: studentId, // Pass the fetched student ID
+                    college: college, // Pass the fetched college
+                    email: email, // Pass the fetched email
+                    phoneNumber: phoneNumber, // Pass the fetched phone number
+                  ),
+                ),
               ),
               Card(
                 color: Colors.grey[200],
@@ -190,8 +234,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  ListTile _buildListTile(
-      BuildContext context, IconData icon, String title, Widget page) {
+  ListTile _buildListTile(BuildContext context, IconData icon, String title, Widget page) {
     return ListTile(
       leading: Icon(icon, color: const Color(0xFF224B65)),
       title: Text(
@@ -204,28 +247,32 @@ class _ProfilePageState extends State<ProfilePage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => page),
+          MaterialPageRoute(
+            builder: (context) => ViewProfilePage(
+              userName: studentName,
+              major: studentMajor,
+              studentId: studentId, // Pass the student ID
+              college: college, // Pass the college
+              email: email, // Pass the email
+              phoneNumber: phoneNumber, // Pass the phone number
+              ),
+          ),
         );
       },
     );
   }
 }
 
-class ViewProfilePage extends StatefulWidget {
-  const ViewProfilePage({super.key});
+class ViewProfilePage extends StatelessWidget {
 
-  @override
-  State<ViewProfilePage> createState() => _ViewProfilePageState();
-}
+  final String userName;
+  final int studentId; // Keep studentId as int
+  final String major;
+  final String college; // Correct spelling to college
+  final String email;
+  final String phoneNumber;
 
-class _ViewProfilePageState extends State<ViewProfilePage> {
-  // Sample retrieved data
-  String userName = "Peter Parker";
-  String StudentID = "2211116";
-  String major = "Software Engineering";
-  String collage = "Computer Science and Engineering";
-  String email = "2211116@uj.edu.sa";
-  String phoneNumber = "+966 573 829 3822";
+  const ViewProfilePage({Key? key, required this.userName, required this.major, required this.studentId, required this.college, required this.email, required this.phoneNumber}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -256,8 +303,9 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                           width: 20.0), // Space between picture and name
                       Column(
                         children: [
-                          const Text(
-                            'Peter parker',
+                           Text(
+                            userName,
+                            // Use the passed username
                             textAlign: TextAlign.center, // Center the text
                             style: TextStyle(
                               fontSize: 28.0,
@@ -265,8 +313,8 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                               color: Color.fromARGB(255, 93, 93, 93),
                             ),
                           ),
-                          const Text(
-                            'Software Engineering',
+                           Text(
+                              major,
                             textAlign: TextAlign.center, // Center the text
                             style: TextStyle(
                               fontSize: 16.0,
@@ -282,11 +330,11 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   ),
                   _buildTextField('Name', 'Enter your name', userName),
                   SizedBox(height: 16),
-                  _buildTextField('ID', 'Enter your email', StudentID),
+                  _buildTextField('ID', 'Enter your email', studentId.toString()),
                   SizedBox(height: 16),
                   _buildTextField('Major', 'Enter your phone number', major),
                   SizedBox(height: 16),
-                  _buildTextField('Department', 'Enter your collage', collage),
+                  _buildTextField('Department', 'Enter your collage', college),
                   SizedBox(height: 16),
                   _buildTextField('Email', 'Enter your email', email),
                   SizedBox(height: 16),
@@ -317,7 +365,7 @@ Widget _buildTextField(String label, String hint, String retrievedData) {
           fontWeight: FontWeight.bold,
         ),
       ),
-      SizedBox(height: 8),
+      const SizedBox(height: 8),
       Container(
         color: Colors.white,
         child: TextField(
