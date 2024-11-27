@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+//  // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'dart:convert';
 import 'package:classwift/models/Report.dart';
@@ -23,7 +23,8 @@ import 'package:classwift/models/Report.dart';
 import 'package:classwift/models/building.dart';
 
 class StudentView extends StatefulWidget {
-  const StudentView({super.key});
+  final int? userId;
+  const StudentView({Key? key, this.userId}) : super(key: key);
 
   @override
   State<StudentView> createState() => _HomePageState();
@@ -33,7 +34,10 @@ class _HomePageState extends State<StudentView> {
   List<Report> reports = [];
   bool isLoading = true;
   final ApiService _apiService = ApiService(); // Initialize ApiService
-  List screens = [const StudentView(), ProfilePage()];
+  List<Widget> screens = [
+    StudentView(userId: 1),
+    ProfilePage()
+  ]; // Example usage
   int currentIndex = 0;
 
   @override
@@ -44,7 +48,6 @@ class _HomePageState extends State<StudentView> {
 
   Future<void> fetchReports() async {
     try {
-      // Use the ApiService to fetch reports
       final fetchedReports = await _apiService.fetchReports();
 
       setState(() {
@@ -71,7 +74,6 @@ class _HomePageState extends State<StudentView> {
             currentIndex = value;
           });
           if (currentIndex == 1) {
-            // Navigate to ProfilePage when profile icon is tapped
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => ProfilePage()),
@@ -84,23 +86,19 @@ class _HomePageState extends State<StudentView> {
         ],
       ),
       drawer: Drawer(
-        //backgroundColor: Colors.white60,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             SizedBox(height: 30),
             Container(
-              alignment: Alignment.centerLeft, // Align to the left
+              alignment: Alignment.centerLeft,
               padding: EdgeInsets.all(16.0),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Align children to the left
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(Icons.menu_rounded,
                       color: Color.fromARGB(255, 121, 89, 178)),
-                  SizedBox(
-                    height: 10,
-                  ),
+                  SizedBox(height: 10),
                   Text(
                     'More',
                     style: TextStyle(
@@ -165,15 +163,11 @@ class _HomePageState extends State<StudentView> {
               fit: BoxFit.cover, // Ensures the image covers the entire screen
             ),
           ),
-
-          // Content
           SafeArea(
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(height: 15),
-
-                  // App bar
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -184,12 +178,10 @@ class _HomePageState extends State<StudentView> {
                             icon: Icon(Icons.menu,
                                 color: Color.fromARGB(255, 56, 120, 176)),
                             onPressed: () {
-                              Scaffold.of(context)
-                                  .openDrawer(); // Opens the sidebar
+                              Scaffold.of(context).openDrawer();
                             },
                           ),
                         ),
-                        // Logo
                         Image.asset(
                           'lib/assets/logo.png',
                           height: 45,
@@ -197,7 +189,6 @@ class _HomePageState extends State<StudentView> {
                       ],
                     ),
                   ),
-
                   SizedBox(height: 5),
                   Padding(
                     padding: const EdgeInsets.symmetric(
@@ -213,15 +204,14 @@ class _HomePageState extends State<StudentView> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           Text(
-                            'Peter B. Parker',
+                            'Peter B. Parker', // You can replace this with dynamic user name
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 24),
-                          )
+                          ),
                         ],
                       ),
                     ),
                   ),
-                  // Card --> Catchphrase
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Card(
@@ -233,7 +223,6 @@ class _HomePageState extends State<StudentView> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // The Phrase
                             Column(
                               children: [
                                 Text(
@@ -245,10 +234,7 @@ class _HomePageState extends State<StudentView> {
                                 )
                               ],
                             ),
-                            SizedBox(
-                              width: 50,
-                            ),
-                            // Picture
+                            SizedBox(width: 15),
                             Image.asset(
                               'lib/assets/college class-amico.png',
                               height: 120,
@@ -258,10 +244,7 @@ class _HomePageState extends State<StudentView> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Services List Title
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -270,23 +253,13 @@ class _HomePageState extends State<StudentView> {
                         Text(
                           'Services list',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                              fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        Text(
-                          '',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
+                        Text('', style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Horizontal ListView --> Services
                   Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
@@ -306,7 +279,7 @@ class _HomePageState extends State<StudentView> {
                             serviceName: 'Report an issue',
                             iconImagePath: 'lib/assets/file-edit.png',
                             pageTitle: 'Reports',
-                            pageName: ReportPage(),
+                            pageName: ReportPage(userId: widget.userId ?? 0),
                           ),
                           ServicesCard(
                             serviceName: 'History',
@@ -318,10 +291,7 @@ class _HomePageState extends State<StudentView> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Events List Title
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -330,27 +300,17 @@ class _HomePageState extends State<StudentView> {
                         Text(
                           'Events',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                              fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        Text(
-                          '',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
+                        Text('', style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ),
-
                   SizedBox(height: 25),
-
-                  // Horizontal ListView for Events
                   Padding(
                     padding: EdgeInsets.only(left: 15),
                     child: SizedBox(
-                      height: 250, // Set height for horizontal ListView
+                      height: 250,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
                         children: [
@@ -369,19 +329,14 @@ class _HomePageState extends State<StudentView> {
                           EventCard(
                               eventImagePath: 'lib/assets/event2.jpg',
                               eventOrganizer: 'Drone Club',
-                              eventDesc: 'presentation'),
-                          EventCard(
-                              eventImagePath: 'lib/assets/event4.jpg',
-                              eventOrganizer: 'SWE Club',
                               eventDesc: 'a workshop'),
                         ],
                       ),
                     ),
                   ),
-
                   SizedBox(height: 25),
 
-                  // Recents List Title
+//                   // Recents List Title
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -413,35 +368,34 @@ class _HomePageState extends State<StudentView> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: isLoading
-                          ? CircularProgressIndicator() // Show loading indicator
-                          : reports.isEmpty
-                              ? Text(
-                                  'No reports available') // Show message if no reports
-                              : SizedBox(
-                                  height: 250,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: reports.length,
-                                    itemBuilder: (context, index) {
-                                      Report report =
-                                          reports[index]; // Get each report
-                                      return ReportHistoryCard(
-                                        reportID: report.reportId,
-                                        reportDate: report.date,
-                                        reportBuilding: report.building,
-                                        reportFloor: report.floor,
-                                        reportRoomNo: report.classroomNo,
-                                        reportIssue: report.issueType,
-                                        reportDescription: report.problemDesc,
-                                      );
-                                    },
+                      padding: const EdgeInsets.all(15.0),
+                      child: Center(
+                        child: isLoading
+                            ? CircularProgressIndicator() // Show loading indicator
+                            : reports.isEmpty
+                                ? Text(
+                                    'No reports available') // Show message if no reports
+                                : SizedBox(
+                                    height: 250,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: reports.length,
+                                      itemBuilder: (context, index) {
+                                        Report report =
+                                            reports[index]; // Get each report
+                                        return ReportHistoryCard(
+                                          reportID: report.reportId,
+                                          reportDate: report.date,
+                                          reportBuilding: report.building,
+                                          reportFloor: report.floor,
+                                          reportRoomNo: report.classroomNo,
+                                          reportIssue: report.issueType,
+                                          reportDescription: report.problemDesc,
+                                        );
+                                      },
+                                    ),
                                   ),
-                                ),
-                    ),
-                  ),
+                      ))
                 ],
               ),
             ),
@@ -451,3 +405,457 @@ class _HomePageState extends State<StudentView> {
     );
   }
 }
+
+// // class StudentView extends StatelessWidget {
+// //   final int? userId; // Make userId nullable
+
+// //   const StudentView({Key? key, this.userId}) : super(key: key); // Use this to make it optional
+
+// //   @override
+// //   Widget build(BuildContext context) {
+// //     return Scaffold(
+// //       appBar: AppBar(
+// //         title: Text('Student View'),
+// //       ),
+// //       body: Center(
+// //         child: Text(userId != null ? 'User ID: $userId' : 'No User ID provided'),
+// //       ),
+// //     );
+// //   }
+// // }
+
+
+
+// class StudentView extends StatefulWidget {
+//   final int? userId; 
+//   const StudentView({Key? key, this.userId}) : super(key: key);
+  
+
+//   @override
+//   State<StudentView> createState() => _HomePageState();
+// }
+
+// class _HomePageState extends State<StudentView> {
+//   List<Report> reports = [];
+//   bool isLoading = true;
+//   final ApiService _apiService = ApiService(); // Initialize ApiService
+//   List screens = [ StudentView(userId: userId), ProfilePage()];
+//   int currentIndex = 0;
+  
+//   static get userId => null;
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     fetchReports();
+//   }
+
+//   Future<void> fetchReports() async {
+//     try {
+//       // Use the ApiService to fetch reports
+//       final fetchedReports = await _apiService.fetchReports();
+
+//       setState(() {
+//         reports = fetchedReports;
+//         isLoading = false;
+//       });
+//     } catch (e) {
+//       print('Error fetching reports: $e');
+//       setState(() {
+//         isLoading = false;
+//       });
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       bottomNavigationBar: BottomNavigationBar(
+//         selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
+//         unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
+//         currentIndex: currentIndex,
+//         onTap: (value) {
+//           setState(() {
+//             currentIndex = value;
+//           });
+//           if (currentIndex == 1) {
+//             // Navigate to ProfilePage when profile icon is tapped
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(builder: (context) => ProfilePage()),
+//             );
+//           }
+//         },
+//         items: const [
+//           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+//           BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
+//         ],
+//       ),
+//       drawer: Drawer(
+//         //backgroundColor: Colors.white60,
+//         child: ListView(
+//           padding: EdgeInsets.zero,
+//           children: [
+//             SizedBox(height: 30),
+//             Container(
+//               alignment: Alignment.centerLeft, // Align to the left
+//               padding: EdgeInsets.all(16.0),
+//               child: Column(
+//                 crossAxisAlignment:
+//                     CrossAxisAlignment.center, // Align children to the left
+//                 children: [
+//                   Icon(Icons.menu_rounded,
+//                       color: Color.fromARGB(255, 121, 89, 178)),
+//                   SizedBox(
+//                     height: 10,
+//                   ),
+//                   Text(
+//                     'More',
+//                     style: TextStyle(
+//                       fontSize: 24,
+//                       fontWeight: FontWeight.bold,
+//                       color: Color.fromARGB(255, 121, 89, 178),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             SizedBox(height: 20),
+//             ListTile(
+//               leading: Icon(Icons.settings,
+//                   color: Color.fromARGB(255, 121, 89, 178)),
+//               title: Text('Settings'),
+//               onTap: () {
+//                 Navigator.push(context, MaterialPageRoute(builder: (context) {
+//                   return SettingsPage();
+//                 }));
+//               },
+//             ),
+//             ListTile(
+//               leading: Icon(Icons.info_outline_rounded,
+//                   color: Color.fromARGB(255, 121, 89, 178)),
+//               title: Text('About us'),
+//               onTap: () {
+//                 Navigator.push(context, MaterialPageRoute(builder: (context) {
+//                   return about_us();
+//                 }));
+//               },
+//             ),
+//             ListTile(
+//               leading: Icon(Icons.support_agent,
+//                   color: Color.fromARGB(255, 121, 89, 178)),
+//               title: Text('Contact Us'),
+//               onTap: () {
+//                 Navigator.push(context, MaterialPageRoute(builder: (context) {
+//                   return ContactUsPage();
+//                 }));
+//               },
+//             ),
+//             ListTile(
+//               leading: Icon(Icons.exit_to_app,
+//                   color: Color.fromARGB(255, 121, 89, 178)),
+//               title: Text('Exit'),
+//               onTap: () {
+//                 Navigator.push(context, MaterialPageRoute(builder: (context) {
+//                   return WelcomePage();
+//                 }));
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//       body: Stack(
+//         children: [
+//           // Background Image
+//           Positioned.fill(
+//             child: Image.asset(
+//               'lib/assets/wallpaper.png', // Replace with your image path
+//               fit: BoxFit.cover, // Ensures the image covers the entire screen
+//             ),
+//           ),
+
+//           // Content
+//           SafeArea(
+//             child: SingleChildScrollView(
+//               child: Column(
+//                 children: [
+//                   SizedBox(height: 15),
+
+//                   // App bar
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Builder(
+//                           builder: (context) => IconButton(
+//                             icon: Icon(Icons.menu,
+//                                 color: Color.fromARGB(255, 56, 120, 176)),
+//                             onPressed: () {
+//                               Scaffold.of(context)
+//                                   .openDrawer(); // Opens the sidebar
+//                             },
+//                           ),
+//                         ),
+//                         // Logo
+//                         Image.asset(
+//                           'lib/assets/logo.png',
+//                           height: 45,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   SizedBox(height: 5),
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(
+//                         horizontal: 30, vertical: 30),
+//                     child: Container(
+//                       alignment: Alignment.bottomLeft,
+//                       child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             'Hello,',
+//                             style: TextStyle(
+//                                 fontWeight: FontWeight.bold, fontSize: 18),
+//                           ),
+//                           Text(
+//                             'Peter B. Parker',
+//                             style: TextStyle(
+//                                 fontWeight: FontWeight.bold, fontSize: 24),
+//                           )
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+//                   // Card --> Catchphrase
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+//                     child: Card(
+//                       child: Container(
+//                         padding: const EdgeInsets.all(20),
+//                         decoration: BoxDecoration(
+//                             color: Color.fromARGB(255, 210, 224, 251),
+//                             borderRadius: BorderRadius.circular(20)),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: [
+//                             // The Phrase
+//                             Column(
+//                               children: [
+//                                 Text(
+//                                   'From classes to repairs, \nClasSwift cares',
+//                                   style: TextStyle(
+//                                     fontWeight: FontWeight.w500,
+//                                     fontSize: 22,
+//                                   ),
+//                                 )
+//                               ],
+//                             ),
+//                             SizedBox(
+//                               width: 15,
+//                             ),
+//                             // Picture
+//                             Image.asset(
+//                               'lib/assets/college class-amico.png',
+//                               height: 120,
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+
+//                   SizedBox(height: 25),
+
+//                   // Services List Title
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           'Services list',
+//                           style: TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                             fontSize: 20,
+//                           ),
+//                         ),
+//                         Text(
+//                           '',
+//                           style: TextStyle(
+//                             fontSize: 14,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   SizedBox(height: 25),
+
+//                   // Horizontal ListView --> Services
+//                   Padding(
+//                     padding:
+//                         const EdgeInsets.symmetric(horizontal: 25, vertical: 0),
+//                     child: SizedBox(
+//                       height: 80,
+//                       child: ListView(
+//                         scrollDirection: Axis.horizontal,
+//                         children: [
+//                           ServicesCard(
+//                             serviceName: 'View availability',
+//                             iconImagePath: 'lib/assets/users-class.png',
+//                             pageTitle: 'View Availability',
+//                             pageName: AvailabilityPage(
+//                                 title: 'View Classes Availability'),
+//                           ),
+//                           ServicesCard(
+//                             serviceName: 'Report an issue',
+//                             iconImagePath: 'lib/assets/file-edit.png',
+//                             pageTitle: 'Reports',
+//                             pageName: ReportPage(userId: userId ?? 0),
+//                           ),
+//                           ServicesCard(
+//                             serviceName: 'History',
+//                             iconImagePath: 'lib/assets/time-past.png',
+//                             pageTitle: 'History',
+//                             pageName: history_page(),
+//                           ),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+
+//                   SizedBox(height: 25),
+
+//                   // Events List Title
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           'Events',
+//                           style: TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                             fontSize: 20,
+//                           ),
+//                         ),
+//                         Text(
+//                           '',
+//                           style: TextStyle(
+//                             fontSize: 14,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+
+//                   SizedBox(height: 25),
+
+//                   // Horizontal ListView for Events
+//                   Padding(
+//                     padding: EdgeInsets.only(left: 15),
+//                     child: SizedBox(
+//                       height: 250, // Set height for horizontal ListView
+//                       child: ListView(
+//                         scrollDirection: Axis.horizontal,
+//                         children: [
+//                           EventCard(
+//                               eventImagePath: 'lib/assets/event3.jpg',
+//                               eventOrganizer: 'GDGUJ',
+//                               eventDesc: 'a workshop'),
+//                           EventCard(
+//                               eventImagePath: 'lib/assets/some-event.png',
+//                               eventOrganizer: 'GDGUJ',
+//                               eventDesc: 'a workshop'),
+//                           EventCard(
+//                               eventImagePath: 'lib/assets/game-event.png',
+//                               eventOrganizer: 'GDGUJ',
+//                               eventDesc: 'a workshop'),
+//                           EventCard(
+//                               eventImagePath: 'lib/assets/event2.jpg',
+//                               eventOrganizer: 'Drone Club',
+//                               eventDesc: 'presentation'),
+//                           EventCard(
+//                               eventImagePath: 'lib/assets/event4.jpg',
+//                               eventOrganizer: 'SWE Club',
+//                               eventDesc: 'a workshop'),
+//                         ],
+//                       ),
+//                     ),
+//                   ),
+
+//                   SizedBox(height: 25),
+
+//                   // Recents List Title
+//                   Padding(
+//                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                       children: [
+//                         Text(
+//                           'Recent reports',
+//                           style: TextStyle(
+//                             fontWeight: FontWeight.bold,
+//                             fontSize: 20,
+//                           ),
+//                         ),
+//                         TextButton(
+//                           onPressed: () {
+//                             Navigator.push(context,
+//                                 MaterialPageRoute(builder: (context) {
+//                               return const history_page(); // MAKE A POP UP PAGE PLEASE
+//                             }));
+//                           },
+//                           child: Text(
+//                             'see all',
+//                             style: TextStyle(
+//                                 fontSize: 16,
+//                                 color: Colors.grey,
+//                                 fontWeight: FontWeight.w400),
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   Padding(
+//                     padding: const EdgeInsets.all(15.0),
+//                     child: Center(
+//                       child: isLoading
+//                           ? CircularProgressIndicator() // Show loading indicator
+//                           : reports.isEmpty
+//                               ? Text(
+//                                   'No reports available') // Show message if no reports
+//                               : SizedBox(
+//                                   height: 250,
+//                                   child: ListView.builder(
+//                                     scrollDirection: Axis.horizontal,
+//                                     itemCount: reports.length,
+//                                     itemBuilder: (context, index) {
+//                                       Report report =
+//                                           reports[index]; // Get each report
+//                                       return ReportHistoryCard(
+//                                         reportID: report.reportId,
+//                                         reportDate: report.date,
+//                                         reportBuilding: report.building,
+//                                         reportFloor: report.floor,
+//                                         reportRoomNo: report.classroomNo,
+//                                         reportIssue: report.issueType,
+//                                         reportDescription: report.problemDesc,
+//                                       );
+//                                     },
+//                                   ),
+//                                 ),
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }

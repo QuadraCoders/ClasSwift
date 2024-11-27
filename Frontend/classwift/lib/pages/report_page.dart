@@ -6,13 +6,16 @@ import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
 class ReportPage extends StatefulWidget {
-  const ReportPage({super.key});
+    final int userId; // Add userId as a required parameter
+
+  const ReportPage({super.key, required this.userId});
 
   @override
   _ReportPageState createState() => _ReportPageState();
 }
 
 class _ReportPageState extends State<ReportPage> {
+  late int userId;
   String? selectedBuilding;
   String? selectedFloor;
   String? selectedClassNo;
@@ -26,6 +29,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   void initState() {
     super.initState();
+    userId = widget.userId;
     _loadBuildingData();
   }
 
@@ -57,65 +61,6 @@ class _ReportPageState extends State<ReportPage> {
     });
   }
 
-  // Future<void> _saveReport() async {
-  //   final reportData = {
-  //     "reportId": _generateReportId(),
-  //     "building": selectedBuilding,
-  //     "floor": selectedFloor,
-  //     "classroomNo": selectedClassNo,
-  //     "date": DateTime.now().toIso8601String().split('T').first,
-  //     "issueType": selectedIssueType,
-  //     "problemDesc": _descriptionController.text,
-  //     "status": "Under maintenance",
-  //     "user_id": 1004
-  //   };
-
-  //   const filePath = 'reports.json';
-  //   final file = File(filePath);
-
-  //   try {
-  //     List<dynamic> reports = [];
-  //     if (await file.exists()) {
-  //       final fileContents = await file.readAsString();
-  //       final jsonData = json.decode(fileContents);
-  //       reports = jsonData['reports'] ?? [];
-  //     }
-
-  //     reports.add(reportData);
-  //     final updatedData = json.encode({"reports": reports});
-  //     await file.writeAsString(updatedData, mode: FileMode.write);
-
-  //     _showFeedbackDialog(true);
-  //   } catch (e) {
-  //     print("Error saving report: $e");
-  //     _showFeedbackDialog(false);
-  //   }
-  // }
-
-  // void _showFeedbackDialog(bool isSuccess) {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (context) {
-  //       return FeedbackPopup(
-  //         message: isSuccess
-  //             ? 'Your report has been submitted successfully!'
-  //             : 'There was an error submitting your report. Please try again.',
-  //         isSuccess: isSuccess,
-  //         onClose: () {
-  //           Navigator.of(context).pop();
-  //           if (isSuccess) {
-  //             Navigator.of(context).pushAndRemoveUntil(
-  //               MaterialPageRoute(
-  //                   builder: (context) => const NavigationBarScreen()),
-  //               (route) => false,
-  //             );
-  //           }
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
 
   Future<void> _saveReport() async {
     // Check for null or empty fields
@@ -138,7 +83,7 @@ class _ReportPageState extends State<ReportPage> {
       "issueType": selectedIssueType,
       "problemDesc": _descriptionController.text,
       "status": "Under maintenance",
-      "user_id": 1004
+      "user_id": userId
     };
 
     const filePath = 'reports.json';
