@@ -7,7 +7,6 @@ import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/faculty_view.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   @override

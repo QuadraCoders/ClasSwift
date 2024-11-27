@@ -32,7 +32,8 @@ class _LogStudentState extends State<LogStudent> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _togglePasswordVisibility() {
@@ -44,6 +45,9 @@ class _LogStudentState extends State<LogStudent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -90,9 +94,12 @@ class _LogStudentState extends State<LogStudent> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: 'ID',
-                      labelStyle: const TextStyle(color: Color.fromARGB(255, 72, 134, 189)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(255, 72, 134, 189)),
                       border: const OutlineInputBorder(),
-                      errorText: idFieldError ? 'Invalid type. ID must be exactly 7 digits and numeric.' : null,
+                      errorText: idFieldError
+                          ? 'Invalid type. ID must be exactly 7 digits and numeric.'
+                          : null,
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -107,13 +114,18 @@ class _LogStudentState extends State<LogStudent> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: const TextStyle(color: Color.fromARGB(255, 72, 134, 189)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(255, 72, 134, 189)),
                       border: const OutlineInputBorder(),
-                      errorText: passwordFieldError ? 'This field should not be empty' : null,
+                      errorText: passwordFieldError
+                          ? 'This field should not be empty'
+                          : null,
                       suffixIcon: GestureDetector(
                         onTap: _togglePasswordVisibility,
                         child: Icon(
-                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          _obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: Colors.grey,
                         ),
                       ),
@@ -123,7 +135,8 @@ class _LogStudentState extends State<LogStudent> {
                         passwordFieldError = false; // Reset error state
                       });
                     },
-                    style: TextStyle(color: passwordFieldError ? Colors.red : null),
+                    style: TextStyle(
+                        color: passwordFieldError ? Colors.red : null),
                   ),
                   const SizedBox(height: 5),
                   const Align(
@@ -145,11 +158,13 @@ class _LogStudentState extends State<LogStudent> {
 
                       try {
                         // Check if the student exists with this ID
-                        Student student = await apiService.fetchStudentById(enteredId);
-                        
+                        Student student =
+                            await apiService.fetchStudentById(enteredId);
+
                         if (student.password == enteredPassword) {
                           // Navigate to the StudentView if credentials are correct
-                          Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
                             return const StudentView();
                           }));
                         } else {
@@ -157,8 +172,8 @@ class _LogStudentState extends State<LogStudent> {
                           _showSnackBar("Invalid ID/Password");
                         }
                       } catch (e) {
-                         print(e); // Log the full exception for better debugging
-                         _showSnackBar('Error: ${e.toString()}');
+                        print(e); // Log the full exception for better debugging
+                        _showSnackBar('Error: ${e.toString()}');
                       }
                     },
                     style: ElevatedButton.styleFrom(

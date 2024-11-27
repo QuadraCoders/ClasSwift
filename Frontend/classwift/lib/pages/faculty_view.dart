@@ -13,7 +13,6 @@ import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/faculty_profile.dart';
 import 'package:classwift/pages/history_page.dart';
-import 'package:classwift/pages/login_page.dart';
 import 'package:classwift/pages/profile_page.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/Availability_Page.dart';
