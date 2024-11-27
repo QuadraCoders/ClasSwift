@@ -39,10 +39,10 @@ class ApiService {
             body: jsonEncode(<String, dynamic>{
               'classroomNo': classroomNo,
               'isAvailable': isAvailable,
-              'floor': 1, // Example value, adjust as needed
-              'capacity': 30, // Example value, adjust as needed
-              'isALab': false, // Example value, adjust as needed
-              'duration': '50 min', // Example value, adjust as needed
+              'floor': 1,
+              'capacity': 30,
+              'isALab': false,
+              'duration': '50 min',
             }),
           )
           .timeout(const Duration(seconds: 10));
@@ -89,7 +89,7 @@ class ApiService {
   }
 }
 
- // New method to fetch maintenance staff data
+ // method to fetch maintenance staff data
  Future<List<MaintenanceStaff>> fetchMaintenanceStaff() async {
     final response = await http.get(Uri.parse('$baseUrl/maintenance-staff'));
 
@@ -115,11 +115,11 @@ class ApiService {
   final response = await http.get(Uri.parse('$baseUrl/faculty/login?faculty_id=$facultyId&password=$password'));
 
   print('Response status: ${response.statusCode}');
-  print('Response body: ${response.body}'); // Debug line
+  print('Response body: ${response.body}');
 
   if (response.statusCode == 200) {
     var responseData = json.decode(response.body);
-    print('Parsed Response: $responseData'); // Debug line to see the parsed data
+    print('Parsed Response: $responseData'); 
     return FacultyMember.fromJson(responseData);
   } else {
     final errorData = json.decode(response.body);
