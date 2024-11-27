@@ -56,16 +56,7 @@ class _DemoPageState extends State<AvailabilityPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Center(
-                    //   child: Text(
-                    //     'Building 11',
-                    //     style: TextStyle(
-                    //       fontSize: 30,
-                    //       fontWeight: FontWeight.bold,
-                    //       color: Colors.black,
-                    //     ),
-                    //   ),
-                    // ),
+
                     const SizedBox(height: 20),
                     Text(
                       'Available Classrooms in building 11',

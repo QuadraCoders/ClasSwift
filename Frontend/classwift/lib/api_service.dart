@@ -27,20 +27,6 @@ class ApiService {
     }
   }
 
-// Future<Map<String, dynamic>> fetchBuildingData() async {
-//   try {
-//     final response = await http.get(Uri.parse("$baseUrl/building"));
-//     if (response.statusCode == 200) {
-//       final Map<String, dynamic> data = json.decode(response.body);
-//       return data;
-//     } else {
-//       throw Exception('Failed to load building data: ${response.statusCode}');
-//     }
-//   } catch (e) {
-//     throw Exception('Error fetching building data: $e');
-//   }
-// }
-
   Future<void> updateClassroomAvailability(
       int classroomNo, bool isAvailable) async {
     try {

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:classwift/api_service.dart';
-import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 

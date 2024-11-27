@@ -224,35 +224,6 @@ class _DemoPageState extends State<AlternativePage> {
                       }
                     }
                   },
-
-                  // onPressed: () {
-                  //   // Show the popup when the button is clicked
-                  //   showDialog(
-                  //     context: context,
-                  //     builder: (BuildContext context) {
-                  //       return FeedbackPopup(
-                  //         message:
-                  //             "You selected Classroom No: ${classroom.classroomNo}",
-                  //         isSuccess: true,
-                  //         onClose: () {
-                  //           // Update the classroom state here
-                  //           setState(() {
-                  //             classroom.isAvailable = false;
-                  //           });
-                  //           // Send the update request to the API
-                  //           apiService.updateClassroomAvailability(
-                  //               classroom.classroomNo, false);
-                  //           // Refetch the data to reflect the change
-                  //           setState(() {
-                  //             futureBuilding = apiService.fetchBuildingData();
-                  //           });
-                  //           Navigator.of(context)
-                  //               .pop(classroom); // Close the dialog
-                  //         },
-                  //       );
-                  //     },
-                  //   );
-                  // },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),

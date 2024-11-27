@@ -1,4 +1,3 @@
-import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/LogStudent%20.dart';
 import 'package:classwift/pages/LogFaculty.dart';
 import 'package:classwift/pages/LogMaintenance.dart';

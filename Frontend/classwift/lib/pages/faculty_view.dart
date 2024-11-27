@@ -13,7 +13,7 @@ import 'package:classwift/pages/alternative_page.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/faculty_profile.dart';
 import 'package:classwift/pages/history_page.dart';
-import 'package:classwift/pages/profile_page.dart';
+import 'package:classwift/pages/student_profile.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/Availability_Page.dart';
 import 'package:classwift/pages/welcome_page.dart';
@@ -304,12 +304,6 @@ class _HomePageState extends State<FacultyView> {
                             pageName: AlternativePage(
                                 title: 'View alternative classes'),
                           ),
-                          // ServicesCard(
-                          //   serviceName: 'Report an issue',
-                          //   iconImagePath: 'lib/assets/file-edit.png',
-                          //   pageTitle: 'Reports',
-                          //   pageName: ReportPage(),
-                          // ),
                           ServicesCard(
                             serviceName: 'History',
                             iconImagePath: 'lib/assets/time-past.png',
