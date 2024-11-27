@@ -46,19 +46,19 @@ class _HomePageState extends State<history_page> {
       appBar: AppBar(title: Text("Reports History")),
       body: Center(
         child: isLoading
-            ? CircularProgressIndicator() // Show loading indicator
+            ? CircularProgressIndicator()
             : reports.isEmpty
-                ? Text('No reports available') // Show message if no reports
+                ? Text('No reports available')
                 : RefreshIndicator(
                     onRefresh:
-                        fetchReports, // Call fetchReports() when user pulls down
+                        fetchReports,
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Number of columns
+                        crossAxisCount: 2,
                       ),
-                      itemCount: reports.length, // Number of items in the grid
+                      itemCount: reports.length, 
                       itemBuilder: (context, index) {
-                        Report report = reports[index]; // Get each report
+                        Report report = reports[index];
                         return ReportHistoryCard(
                           reportID: report.reportId,
                           reportDate: report.date,

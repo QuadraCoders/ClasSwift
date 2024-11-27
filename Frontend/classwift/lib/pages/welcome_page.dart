@@ -1,4 +1,3 @@
-import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/LogStudent%20.dart';
 import 'package:classwift/pages/LogFaculty.dart';
 import 'package:classwift/pages/LogMaintenance.dart';
@@ -7,7 +6,6 @@ import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/faculty_view.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
-import 'login_page.dart';
 
 class WelcomePage extends StatefulWidget {
   @override
@@ -27,7 +25,7 @@ class _WelcomePageState extends State<WelcomePage>
       vsync: this,
     );
 
-    // Create a scaling animation
+    // to Create a scaling animation
     _animation = Tween<double>(begin: 0.5, end: 1).animate(_controller);
     _controller.forward();
   }
@@ -50,8 +48,8 @@ class _WelcomePageState extends State<WelcomePage>
               ScaleTransition(
                 scale: _animation,
                 child: Image.asset(
-                  'lib/assets/logo.png', // Change this to your logo's path
-                  width: 300, // Desired logo size
+                  'lib/assets/logo.png', 
+                  width: 300, 
                 ),
               ),
               const SizedBox(height: 20.0),
@@ -71,7 +69,7 @@ class _WelcomePageState extends State<WelcomePage>
                   color: Color(0xFF224B65),
                 ),
               ),
-              const SizedBox(height: 200.0), // Space before the circles
+              const SizedBox(height: 200.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -94,7 +92,6 @@ class _WelcomePageState extends State<WelcomePage>
       BuildContext context, String role, IconData icon, Widget page) {
     return GestureDetector(
       onTap: () {
-        // Navigate to the page provided as a parameter
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => page),
@@ -120,10 +117,10 @@ class _WelcomePageState extends State<WelcomePage>
             child: Icon(
               icon,
               color: Colors.white,
-              size: 40, // Adjust icon size
+              size: 40, 
             ),
           ),
-          const SizedBox(height: 8.0), // Space between circle and label
+          const SizedBox(height: 8.0), 
           Text(
             role,
             textAlign: TextAlign.center,

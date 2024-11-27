@@ -2,7 +2,6 @@
 
 import 'package:classwift/api_service.dart';
 import 'package:classwift/models/Student.dart';
-import 'package:classwift/pages/Demo.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
@@ -592,6 +591,7 @@ class _ReportIssuePageState extends State<ReportIssuePage> {
                     ),
                   ),
                   const SizedBox(height: 30),
+                  
                   // Contact Preference Section
                   const Text(
                     'How would you like us to contact you? Please select an option from the list below.',

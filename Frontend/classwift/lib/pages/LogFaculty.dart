@@ -40,6 +40,9 @@ class _LogFacultyState extends State<LogFaculty> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Stack(
         children: [
           Positioned.fill(

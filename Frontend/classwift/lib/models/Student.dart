@@ -1,6 +1,6 @@
 class Student {
     final String name;
-    final int student_id; // JSON key should match this name
+    final int student_id;
     final String major;
     final String college;
     final String email;
@@ -20,7 +20,7 @@ class Student {
     factory Student.fromJson(Map<String, dynamic> json) {
         return Student(
             name: json['name'],
-            student_id: json['student_id'], // Ensure it matches the key in JSON
+            student_id: json['student_id'],
             major: json['major'],
             college: json['college'],
             email: json['email'],

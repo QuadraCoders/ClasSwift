@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:classwift/api_service.dart';
-import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
 class ReportPage extends StatefulWidget {
-    final int userId; // Add userId as a required parameter
+    final int userId;
 
   const ReportPage({super.key, required this.userId});
 
@@ -63,13 +62,13 @@ class _ReportPageState extends State<ReportPage> {
 
 
   Future<void> _saveReport() async {
-    // Check for null or empty fields
+
     if (selectedBuilding == null ||
         selectedFloor == null ||
         selectedClassNo == null ||
         selectedIssueType == null ||
         _descriptionController.text.isEmpty) {
-      // Show a dialog or snackbar with an error message
+
       _showFeedbackDialog(false, message: 'Please fill in all fields.');
       return;
     }

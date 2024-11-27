@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:classwift/api_service.dart';
-import 'package:classwift/models/maintenace_staff.dart'; 
+import 'package:classwift/models/maintenace_staff.dart';
 import 'package:classwift/pages/MaintenanceView.dart';
 
 class LogMaintenance extends StatefulWidget {
@@ -31,7 +31,8 @@ class _LogMaintenanceState extends State<LogMaintenance> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   void _togglePasswordVisibility() {
@@ -43,6 +44,9 @@ class _LogMaintenanceState extends State<LogMaintenance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+      ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -80,10 +84,13 @@ class _LogMaintenanceState extends State<LogMaintenance> {
                     controller: staffIdController,
                     decoration: InputDecoration(
                       labelText: 'Staff ID',
-                      labelStyle: const TextStyle(color: Color.fromARGB(255, 72, 134, 189)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(255, 72, 134, 189)),
                       border: const OutlineInputBorder(),
-                      errorText: staffIdFieldError 
-                          ? (staffIdController.text.trim().isEmpty ? 'Staff ID cannot be empty' : 'Invalid input, must follow the format "XX000"') 
+                      errorText: staffIdFieldError
+                          ? (staffIdController.text.trim().isEmpty
+                              ? 'Staff ID cannot be empty'
+                              : 'Invalid input, must follow the format "XX000"')
                           : null,
                     ),
                     onChanged: (value) {
@@ -98,13 +105,18 @@ class _LogMaintenanceState extends State<LogMaintenance> {
                     obscureText: _obscurePassword,
                     decoration: InputDecoration(
                       labelText: 'Password',
-                      labelStyle: const TextStyle(color: Color.fromARGB(255, 72, 134, 189)),
+                      labelStyle: const TextStyle(
+                          color: Color.fromARGB(255, 72, 134, 189)),
                       border: const OutlineInputBorder(),
-                      errorText: passwordFieldError ? 'Password cannot be empty' : null,
+                      errorText: passwordFieldError
+                          ? 'Password cannot be empty'
+                          : null,
                       suffixIcon: GestureDetector(
                         onTap: _togglePasswordVisibility,
                         child: Icon(
-                          _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          _obscurePassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: Colors.grey,
                         ),
                       ),
@@ -130,13 +142,14 @@ class _LogMaintenanceState extends State<LogMaintenance> {
 
                       try {
                         // Fetch the maintenance staff by ID and check password
-                        MaintenanceStaff staff = 
-                          await apiService.fetchMaintenanceStaffById(enteredId);
-                        
+                        MaintenanceStaff staff = await apiService
+                            .fetchMaintenanceStaffById(enteredId);
+
                         if (staff.password == enteredPassword) {
                           // Navigate to the MaintenanceView if credentials are correct
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-                            return const Maintenanceview(); 
+                          Navigator.pushReplacement(context,
+                              MaterialPageRoute(builder: (context) {
+                            return const Maintenanceview();
                           }));
                         } else {
                           _showSnackBar("Invalid ID/Password");

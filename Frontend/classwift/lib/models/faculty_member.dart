@@ -1,4 +1,3 @@
-// lib/models/faculty_member.dart
 class FacultyMember {
   final String name;
   final String phone;
@@ -18,12 +17,12 @@ class FacultyMember {
 
   factory FacultyMember.fromJson(Map<String, dynamic> json) {
     return FacultyMember(
-      name: json['name'] ?? '',  // Default to empty string if null
+      name: json['name'] ?? '',
       phone: json['phone'] ?? '',
       email: json['email'] ?? '',
       department: json['department'] ?? '',
-      id: json['id'],  // Typically, this shouldn't be null; ensure valid input
-      password: json['password'] ?? '',  // Handle with care, avoid sending it around
+      id: json['id'],
+      password: json['password'] ?? '',
     );
   }
 }
