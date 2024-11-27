@@ -34,7 +34,7 @@ class _DemoPageState extends State<AlternativePage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/wallpapers (3).png'),
-            fit: BoxFit.fill, // Cover the entire screen
+            fit: BoxFit.fill, 
           ),
         ),
         child: FutureBuilder<Building>(
@@ -52,7 +52,7 @@ class _DemoPageState extends State<AlternativePage> {
 
               return Padding(
                 padding: const EdgeInsets.all(
-                    16.0), // Padding around the entire content
+                    16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -70,12 +70,11 @@ class _DemoPageState extends State<AlternativePage> {
                     Divider(endIndent: 25, indent: 25),
                     const SizedBox(height: 30),
                     Expanded(
-                      // This makes the GridView take the remaining space
                       child: GridView(
                         physics: const BouncingScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Adjust the number of columns
+                          crossAxisCount: 2, 
                           crossAxisSpacing: 6.0,
                           mainAxisSpacing: 6.0,
                         ),
@@ -100,8 +99,8 @@ class _DemoPageState extends State<AlternativePage> {
         : const Color(0xFFD0F0C0);
 
     return Container(
-      width: 160, // Fixed width
-      height: 200, // Fixed height
+      width: 160,
+      height: 200,
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(
