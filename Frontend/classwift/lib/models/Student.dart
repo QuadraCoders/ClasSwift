@@ -1,6 +1,6 @@
 class Student {
     final String name;
-    final int student_id;
+    final int student_id; // JSON key should match this name
     final String major;
     final String college;
     final String email;
@@ -20,7 +20,7 @@ class Student {
     factory Student.fromJson(Map<String, dynamic> json) {
         return Student(
             name: json['name'],
-            student_id: json['student_id'],
+            student_id: json['student_id'], // Ensure it matches the key in JSON
             major: json['major'],
             college: json['college'],
             email: json['email'],
@@ -28,4 +28,6 @@ class Student {
             password: json['password'],
         );
     }
+
+  get profilePictureUrl => null;
 }

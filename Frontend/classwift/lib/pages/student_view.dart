@@ -1,96 +1,61 @@
-//  // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'dart:convert';
 import 'package:classwift/models/Report.dart';
+import 'package:classwift/models/Student.dart';
 import 'package:classwift/api_service.dart';
 import 'package:classwift/card/event_card.dart';
 import 'package:classwift/card/report_history_card.dart';
 import 'package:classwift/card/services_card.dart';
-import 'package:classwift/models/Report.dart';
-import 'package:classwift/models/Student.dart';
 import 'package:classwift/pages/About_us.dart';
 import 'package:classwift/pages/Settings.dart';
 import 'package:classwift/pages/contact_page.dart';
 import 'package:classwift/pages/history_page.dart';
-import 'package:classwift/pages/student_profile.dart';
 import 'package:classwift/pages/report_page.dart';
 import 'package:classwift/pages/Availability_Page.dart';
+import 'package:classwift/pages/student_profile.dart';
 import 'package:classwift/pages/welcome_page.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:classwift/models/Report.dart';
-import 'package:classwift/models/building.dart';
 
 class StudentView extends StatefulWidget {
   final int? userId;
+
   const StudentView({Key? key, this.userId}) : super(key: key);
 
   @override
-  State<StudentView> createState() => _HomePageState();
+  State<StudentView> createState() => _StudentViewState();
 }
 
-class _HomePageState extends State<StudentView> {
+class _StudentViewState extends State<StudentView> {
   List<Report> reports = [];
-  String studentName = "";
-  String studentMajor = "";
+  Student? currentUser;
   bool isLoading = true;
-  final ApiService _apiService = ApiService(); // Initialize ApiService
-
-  //stroing fetched data
-  String? storedStudentName;
-  String? storedStudentMajor;
-
-  List<Widget> screens = [
-    StudentView(userId: 1),
-    ProfilePage()
-  ]; // Example usage
+  final ApiService _apiService = ApiService();
   int currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     fetchReports();
-    if (widget.userId != null) {
-        fetchStudentData(); // Fetch from the API on initialization
-    }
+    fetchStudentData();
   }
 
   Future<void> fetchReports() async {
     try {
       final fetchedReports = await _apiService.fetchReports();
-
       setState(() {
         reports = fetchedReports;
-        isLoading = false;
       });
     } catch (e) {
       print('Error fetching reports: $e');
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
-
   Future<void> fetchStudentData() async {
-    if (storedStudentName != null && storedStudentMajor != null) {
-      // Use stored data if available
-      setState(() {
-        studentName = storedStudentName!;
-        studentMajor = storedStudentMajor!;
-        isLoading = false; // Stop loading
-      });
-    } else if (widget.userId != null) {
-      // Fetch data from the API if not stored
+    if (widget.userId != null) {
       try {
         Student student = await _apiService.fetchStudentById(widget.userId!);
         setState(() {
-          storedStudentName = student.name; // Store once fetched
-          storedStudentMajor = student.major; // Store once fetched
-          studentName = student.name;
-          studentMajor = student.major;
+          currentUser = student;
           isLoading = false;
         });
       } catch (e) {
@@ -99,6 +64,10 @@ class _HomePageState extends State<StudentView> {
           isLoading = false;
         });
       }
+    } else {
+      setState(() {
+        isLoading = false; // No user ID provided, end loading
+      });
     }
   }
 
@@ -116,7 +85,8 @@ class _HomePageState extends State<StudentView> {
           if (currentIndex == 1) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfilePage(userId: widget.userId)), // Pass userId here
+              MaterialPageRoute(
+                  builder: (context) => ProfilePage(userId: widget.userId!)),
             );
           }
         },
@@ -167,7 +137,7 @@ class _HomePageState extends State<StudentView> {
               title: Text('About us'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return about_us();
+                  return about_us(); // Ensure this is correctly defined
                 }));
               },
             ),
@@ -199,8 +169,8 @@ class _HomePageState extends State<StudentView> {
           // Background Image
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/wallpaper.png', // Replace with your image path
-              fit: BoxFit.cover, // Ensures the image covers the entire screen
+              'lib/assets/wallpaper.png',
+              fit: BoxFit.cover,
             ),
           ),
           SafeArea(
@@ -231,7 +201,10 @@ class _HomePageState extends State<StudentView> {
                   ),
                   SizedBox(height: 5),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 30),
+                    child: Container(
+                      alignment: Alignment.bottomLeft,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -241,21 +214,24 @@ class _HomePageState extends State<StudentView> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           Text(
-                            isLoading ? 'Loading...' : studentName,
-                            style: TextStyle( fontWeight: FontWeight.bold, fontSize: 24),
+                            isLoading ? 'Loading...' : currentUser!.name,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 24),
                           ),
                         ],
                       ),
-                   
+                    ),
                   ),
+                  // Card for Service Overview
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Card(
                       child: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 210, 224, 251),
-                            borderRadius: BorderRadius.circular(20)),
+                          color: Color.fromARGB(255, 210, 224, 251),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -267,7 +243,7 @@ class _HomePageState extends State<StudentView> {
                                     fontWeight: FontWeight.w500,
                                     fontSize: 22,
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             SizedBox(width: 15),
@@ -281,6 +257,7 @@ class _HomePageState extends State<StudentView> {
                     ),
                   ),
                   SizedBox(height: 25),
+                  // Service List
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -291,7 +268,6 @@ class _HomePageState extends State<StudentView> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        Text('', style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ),
@@ -308,8 +284,7 @@ class _HomePageState extends State<StudentView> {
                             serviceName: 'View availability',
                             iconImagePath: 'lib/assets/users-class.png',
                             pageTitle: 'View Availability',
-                            pageName: AvailabilityPage(
-                                title: 'View Classes Availability'),
+                            pageName: AvailabilityPage(title: 'View Classes Availability'),
                           ),
                           ServicesCard(
                             serviceName: 'Report an issue',
@@ -328,6 +303,7 @@ class _HomePageState extends State<StudentView> {
                     ),
                   ),
                   SizedBox(height: 25),
+                  // Events Section
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -338,7 +314,6 @@ class _HomePageState extends State<StudentView> {
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        Text('', style: TextStyle(fontSize: 14)),
                       ],
                     ),
                   ),
@@ -353,26 +328,25 @@ class _HomePageState extends State<StudentView> {
                           EventCard(
                               eventImagePath: 'lib/assets/event3.jpg',
                               eventOrganizer: 'GDGUJ',
-                              eventDesc: 'a workshop'),
+                              eventDesc: 'A workshop on Flutter'),
                           EventCard(
                               eventImagePath: 'lib/assets/some-event.png',
                               eventOrganizer: 'GDGUJ',
-                              eventDesc: 'a workshop'),
+                              eventDesc: 'A workshop on Dart'),
                           EventCard(
                               eventImagePath: 'lib/assets/game-event.png',
                               eventOrganizer: 'GDGUJ',
-                              eventDesc: 'a workshop'),
+                              eventDesc: 'Game Development Workshop'),
                           EventCard(
                               eventImagePath: 'lib/assets/event2.jpg',
                               eventOrganizer: 'Drone Club',
-                              eventDesc: 'a workshop'),
+                              eventDesc: 'Drone Flying Workshop'),
                         ],
                       ),
                     ),
                   ),
                   SizedBox(height: 25),
-
-//                   // Recents List Title
+                  // Recent Reports Section
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
@@ -389,7 +363,7 @@ class _HomePageState extends State<StudentView> {
                           onPressed: () {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
-                              return const history_page(); // MAKE A POP UP PAGE PLEASE
+                              return const history_page();
                             }));
                           },
                           child: Text(
@@ -404,34 +378,33 @@ class _HomePageState extends State<StudentView> {
                     ),
                   ),
                   Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Center(
-                        child: isLoading
-                            ? CircularProgressIndicator() // Show loading indicator
-                            : reports.isEmpty
-                                ? Text(
-                                    'No reports available') // Show message if no reports
-                                : SizedBox(
-                                    height: 250,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: reports.length,
-                                      itemBuilder: (context, index) {
-                                        Report report =
-                                            reports[index]; // Get each report
-                                        return ReportHistoryCard(
-                                          reportID: report.reportId,
-                                          reportDate: report.date,
-                                          reportBuilding: report.building,
-                                          reportFloor: report.floor,
-                                          reportRoomNo: report.classroomNo,
-                                          reportIssue: report.issueType,
-                                          reportDescription: report.problemDesc,
-                                        );
-                                      },
-                                    ),
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : reports.isEmpty
+                              ? Text('No reports available')
+                              : SizedBox(
+                                  height: 250,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: reports.length,
+                                    itemBuilder: (context, index) {
+                                      Report report = reports[index];
+                                      return ReportHistoryCard(
+                                        reportID: report.reportId,
+                                        reportDate: report.date,
+                                        reportBuilding: report.building,
+                                        reportFloor: report.floor,
+                                        reportRoomNo: report.classroomNo,
+                                        reportIssue: report.issueType,
+                                        reportDescription: report.problemDesc,
+                                      );
+                                    },
                                   ),
-                      ))
+                                ),
+                    ),
+                  ),
                 ],
               ),
             ),

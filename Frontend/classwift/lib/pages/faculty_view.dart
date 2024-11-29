@@ -35,7 +35,7 @@ class _HomePageState extends State<FacultyView> {
   List<Report> reports = [];
   bool isLoading = true;
   final ApiService _apiService = ApiService();
-  List screens = [const FacultyView(), ProfilePage()];
+  List screens = [const FacultyView()];
   int currentIndex = 0;
 
   @override

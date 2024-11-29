@@ -1,13 +1,15 @@
- // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-
-import 'package:classwift/api_service.dart';
-import 'package:classwift/models/Student.dart';
-import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
+import 'package:classwift/models/Student.dart';
+import 'package:classwift/api_service.dart'; // Update if necessary
+import 'change_password_page.dart';
+import 'view_profile_page.dart';
+import 'report_issue_page.dart';
+import 'student_view.dart'; // Adjust this according to your file structure
 
 class ProfilePage extends StatefulWidget {
-    final int? userId;
-    const ProfilePage({Key? key, this.userId}) : super(key: key);
+  final int? userId; // User ID passed during initialization
+
+  const ProfilePage({Key? key, this.userId}) : super(key: key); 
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -20,58 +22,43 @@ class _ProfilePageState extends State<ProfilePage> {
   String college = ""; 
   String email = ""; 
   String phoneNumber = ""; 
+  bool isLoading = true; // Track loading state
 
   @override
   void initState() {
     super.initState();
     if (widget.userId != null) {
-      fetchStudentData(); // Fetch student data as soon as the profile page initializes
+      fetchStudentData(); // Fetch data when the page initializes
     }
   }
+
   Future<void> fetchStudentData() async {
     try {
       Student student = await ApiService().fetchStudentById(widget.userId!);
       setState(() {
+        // Update state with retrieved data
         studentName = student.name;
         studentMajor = student.major;
-        studentId = student.student_id; // Assign the student ID
-        college = student.college; // Assign the college
-        email = student.email; // Assign the email
-        phoneNumber = student.phoneNo; // Assign the phone number
+        studentId = student.student_id; 
+        college = student.college; 
+        email = student.email; 
+        phoneNumber = student.phoneNo; 
+        isLoading = false; // Set loading to false after fetching data
       });
     } catch (e) {
       print('Error fetching student data: $e');
+      setState(() {
+        isLoading = false; // Handle loading error
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    List screens = [const StudentView(), ProfilePage()];
-    int currentIndex = 1;
 
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
-        unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
-        currentIndex: currentIndex,
-        onTap: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-          if (currentIndex == 0) {
-            // Navigate to ProfilePage when profile icon is tapped
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => StudentView()),
-            );
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
-        ],
-      ),
+      bottomNavigationBar: _buildBottomNavigationBar(),
       body: Stack(
         children: [
           // Background image
@@ -80,69 +67,85 @@ class _ProfilePageState extends State<ProfilePage> {
             height: screenSize.height,
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'lib/assets/wallpaper.png'), // Set your wallpaper image here
+                image: AssetImage('lib/assets/wallpaper.png'), // Background image path
                 fit: BoxFit.cover,
               ),
             ),
           ),
-          // Logo at the top right
           Positioned(
             top: 20,
             right: 20,
             child: Image.asset(
-              'lib/assets/logo.png', // Set your logo image here
-              width: 100, // Set desired width
+              'lib/assets/logo.png',
+              width: 100,
             ),
           ),
           SingleChildScrollView(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
               child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, // Center the Column
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Center contents horizontally
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 40,
-                  ),
-                  // Profile Picture Section
-                  _buildProfilePicture(),
-
-                  const SizedBox(
-                      height: 20.0), // Space between picture and name
+                  SizedBox(height: 40),
+                  _buildProfilePicture(), // Profile Picture Section
+                  const SizedBox(height: 20.0),
                   Text(
-                    studentName.isNotEmpty ? studentName : "Loading...",
-                    style: const TextStyle(
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 93, 93, 93),
-                    ),
+                    isLoading ? 'Loading...' : studentName.isNotEmpty ? studentName : "No Name",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 28.0, fontWeight: FontWeight.bold, color: Color.fromARGB(255, 93, 93, 93)),
                   ),
-
-                  const SizedBox(
-                      height: 10.0), // Space between name and additional info
-                   Text(
-                    studentMajor.isNotEmpty ? studentMajor : "Loading...",
-                    textAlign: TextAlign.center, // Center the text
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      color: Color.fromARGB(255, 128, 128, 128),
-                    ),
+                  const SizedBox(height: 10.0),
+                  Text(
+                    isLoading ? 'Loading...' : studentMajor.isNotEmpty ? studentMajor : "No Major",
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 16.0, color: Color.fromARGB(255, 128, 128, 128)),
                   ),
-
-                  const SizedBox(height: 40.0), // Space between sections
-
-                  // ID Card Section
-                  _buildIdCard(),
-
-                  const SizedBox(height: 40.0), // Space between sections
-
-                  // Profile Settings Section
-                  _buildProfileSettings(context),
+                  const SizedBox(height: 40.0),
+                  _buildIdCard(), // ID Card Section
+                  const SizedBox(height: 40.0),
+                  _buildProfileSettings(context), // Profile Settings Section
                 ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BottomNavigationBar _buildBottomNavigationBar() {
+    return BottomNavigationBar(
+      selectedItemColor: const Color.fromARGB(255, 83, 143, 208),
+      unselectedItemColor: const Color.fromARGB(255, 181, 205, 218),
+      onTap: (value) {
+        Navigator.pop(context);
+      },
+      items: const [
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+        BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '')
+      ],
+    );
+  }
+
+  Widget _buildProfilePicture() {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 10.0),
+          Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(width: 4.0, color: Color.fromARGB(200, 142, 187, 227)),
+            ),
+            child: const CircleAvatar(
+              radius: 62.0,
+              backgroundColor: Color.fromARGB(200, 142, 187, 227),
+              child: CircleAvatar(
+                radius: 60.0,
+                backgroundImage: AssetImage('lib/assets/person.png'), // Default profile image
+                backgroundColor: Colors.grey,
               ),
             ),
           ),
@@ -166,9 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: Image.asset(
-                'lib/assets/uniCard.png', // Ensure the path is correct
-                // width: double.infinity,
-                // height: 265.0,
+                'lib/assets/uniCard.png', 
                 fit: BoxFit.fill,
               ),
             ),
@@ -183,52 +184,41 @@ class _ProfilePageState extends State<ProfilePage> {
       padding: const EdgeInsets.all(10.0),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
-        child: Container(
-          //color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Divider(),
-              SizedBox(
-                height: 30,
-              ),
-              const Text(
-                'Profile Settings',
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF224B65),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Divider(),
+            const SizedBox(height: 30),
+            const Text(
+              'Profile Settings',
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold, color: Color(0xFF224B65)),
+            ),
+            const SizedBox(height: 26.0),
+            Card(
+              color: Colors.grey[200],
+              child: _buildListTile(
+                context,
+                Icons.person,
+                'View Profile',
+                ViewProfilePage(
+                  userName: studentName,
+                  major: studentMajor,
+                  studentId: studentId,
+                  college: college,
+                  email: email,
+                  phoneNumber: phoneNumber,
                 ),
               ),
-              const SizedBox(height: 26.0),
-              Card(
-                color: Colors.grey[200],
-                child: _buildListTile(
-                  context, 
-                  Icons.person, 
-                  'View Profile', 
-                  ViewProfilePage(
-                    userName: studentName, // Pass the fetched student name
-                    major: studentMajor, // Pass the fetched student major
-                    studentId: studentId, // Pass the fetched student ID
-                    college: college, // Pass the fetched college
-                    email: email, // Pass the fetched email
-                    phoneNumber: phoneNumber, // Pass the fetched phone number
-                  ),
-                ),
-              ),
-              Card(
-                color: Colors.grey[200],
-                child: _buildListTile(context, Icons.lock, 'Reset Password',
-                    ChangePasswordPage()),
-              ),
-              Card(
-                color: Colors.grey[200],
-                child: _buildListTile(context, Icons.report_problem,
-                    'Report Issue', ReportIssuePage()),
-              ),
-            ],
-          ),
+            ),
+            Card(
+              color: Colors.grey[200],
+              child: _buildListTile(context, Icons.lock, 'Change Password', ChangePasswordPage()),
+            ),
+            Card(
+              color: Colors.grey[200],
+              child: _buildListTile(context, Icons.report_problem, 'Report Issue', ReportIssuePage()),
+            ),
+          ],
         ),
       ),
     );
@@ -239,459 +229,11 @@ class _ProfilePageState extends State<ProfilePage> {
       leading: Icon(icon, color: const Color(0xFF224B65)),
       title: Text(
         title,
-        style: const TextStyle(
-          color: Color(0xFF224B65),
-          fontWeight: FontWeight.w500,
-        ),
+        style: const TextStyle(color: Color(0xFF224B65), fontWeight: FontWeight.w500),
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ViewProfilePage(
-              userName: studentName,
-              major: studentMajor,
-              studentId: studentId, // Pass the student ID
-              college: college, // Pass the college
-              email: email, // Pass the email
-              phoneNumber: phoneNumber, // Pass the phone number
-              ),
-          ),
-        );
+        Navigator.push(context, MaterialPageRoute(builder: (context) => page)); // Navigate to specified page
       },
     );
   }
-}
-
-class ViewProfilePage extends StatelessWidget {
-
-  final String userName;
-  final int studentId; // Keep studentId as int
-  final String major;
-  final String college; // Correct spelling to college
-  final String email;
-  final String phoneNumber;
-
-  const ViewProfilePage({Key? key, required this.userName, required this.major, required this.studentId, required this.college, required this.email, required this.phoneNumber}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('View profile'),
-      ),
-      body: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'lib/assets/wallpapers (4).png', // Replace with your image path
-              fit: BoxFit.cover,
-            ),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              // Wrap the entire content in a SingleChildScrollView
-              padding: const EdgeInsets.all(40.0),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      _buildProfilePicture(),
-
-                      const SizedBox(
-                          width: 20.0), // Space between picture and name
-                      Column(
-                        children: [
-                           Text(
-                            userName,
-                            // Use the passed username
-                            textAlign: TextAlign.center, // Center the text
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              fontWeight: FontWeight.bold,
-                              color: Color.fromARGB(255, 93, 93, 93),
-                            ),
-                          ),
-                           Text(
-                              major,
-                            textAlign: TextAlign.center, // Center the text
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              color: Color.fromARGB(255, 128, 128, 128),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 40,
-                  ),
-                  _buildTextField('Name', 'Enter your name', userName),
-                  SizedBox(height: 16),
-                  _buildTextField('ID', 'Enter your email', studentId.toString()),
-                  SizedBox(height: 16),
-                  _buildTextField('Major', 'Enter your phone number', major),
-                  SizedBox(height: 16),
-                  _buildTextField('Department', 'Enter your collage', college),
-                  SizedBox(height: 16),
-                  _buildTextField('Email', 'Enter your email', email),
-                  SizedBox(height: 16),
-                  _buildTextField(
-                      'Phone Number', 'Enter your phone number', phoneNumber),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// widgets for view profile
-Widget _buildTextField(String label, String hint, String retrievedData) {
-  // Create a TextEditingController to manage the text field
-  TextEditingController controller = TextEditingController(text: retrievedData);
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 8),
-      Container(
-        color: Colors.white,
-        child: TextField(
-          controller: controller, // Use the controller to set the text
-          readOnly: true, // Make the text field uneditable
-          decoration: InputDecoration(
-            hintText: hint,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-class ChangePasswordPage extends StatefulWidget {
-  @override
-  _PasswordResetScreenState createState() => _PasswordResetScreenState();
-}
-
-class _PasswordResetScreenState extends State<ChangePasswordPage> {
-  final _emailController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Reset Password'),
-      ),
-      body: Stack(children: [
-        // Background Image
-        Positioned.fill(
-          child: Image.asset(
-            'lib/assets/wallpapers (4).png', // Replace with your image path
-            fit: BoxFit.cover,
-          ),
-        ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(40.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Reset your password',
-                      style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Enter the email address you used to register.',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w200),
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      color: Colors.white,
-                      child: TextField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration(
-                          labelText: 'Email Address',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        // Handle "Forgot email address" logic here
-                        print('Forgot email address');
-                      },
-                      child: Text(
-                        'Forgot or lost your email address?',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 40),
-                Center(
-                  child: SizedBox(
-                    width:
-                        double.infinity, // Makes the button take the full width
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Add your action here
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Message Sent!")),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 16), // Matches text field height
-                        backgroundColor: Colors.black, // Customize button color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8), // Matches text field corners
-                        ),
-                      ),
-                      child: Text(
-                        "Send Instructions",
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
-class ReportIssuePage extends StatefulWidget {
-  const ReportIssuePage({super.key});
-
-  @override
-  State<ReportIssuePage> createState() => _ReportIssuePageState();
-}
-
-class _ReportIssuePageState extends State<ReportIssuePage> {
-  // Issue choices and their states
-  final Map<String, bool> issueChoices = {
-    'Loading events': false,
-    'Showing available classes': false,
-    'Filling up a report': false,
-    'Submitting your report': false,
-    'Other': false,
-  };
-
-  // Selected contact preference
-  String? selectedContact;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Report Issue'),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Stack(
-        children: [
-          // Background Image
-          Positioned.fill(
-            child: Image.asset(
-              'lib/assets/wallpapers (4).png', // Replace with your image path
-              fit: BoxFit.cover,
-            ),
-          ),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 80),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            'Report an issue with ClasSwift',
-                            style: TextStyle(
-                                fontSize: 30, fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'We are sorry you are facing trouble. Please provide the details below so we can assist you as quickly as possible.',
-                            style: TextStyle(
-                                fontSize: 22, fontWeight: FontWeight.w200),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Divider(endIndent: 30, indent: 30),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  // Issue Type Section
-                  const Text(
-                    'Which of the following options best describes the type of issue you are experiencing?',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  // Checkboxes for issue types
-                  ...issueChoices.keys.map((key) {
-                    return CheckboxListTile(
-                      title: Text(key),
-                      value: issueChoices[key],
-                      onChanged: (value) {
-                        setState(() {
-                          issueChoices[key] = value!;
-                        });
-                      },
-                    );
-                  }).toList(),
-                  const SizedBox(height: 30),
-                  // Description Field
-                  const Text(
-                    'Please describe the problem you are experiencing in the space below. Be as descriptive as possible so we can be sure to help you as best as we can.',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 12),
-                  Container(
-                    color: Colors.white,
-                    child: TextField(
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        hintText:
-                            'Ex. Every time I click reports history, it disappears instead of taking me to the detailed history page.',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-                  
-                  // Contact Preference Section
-                  const Text(
-                    'How would you like us to contact you? Please select an option from the list below.',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 12),
-                  RadioListTile(
-                    title: const Text('Phone call'),
-                    value: 'phone',
-                    groupValue: selectedContact,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedContact = value.toString();
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    title: const Text('Text message'),
-                    value: 'text',
-                    groupValue: selectedContact,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedContact = value.toString();
-                      });
-                    },
-                  ),
-                  RadioListTile(
-                    title: const Text('Email'),
-                    value: 'email',
-                    groupValue: selectedContact,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedContact = value.toString();
-                      });
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  // Submit Button
-                  Center(
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Message Sent!")),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16), // Button height
-                          backgroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: const Text(
-                          "Send Message",
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-Widget _buildProfilePicture() {
-  return Center(
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const SizedBox(height: 10.0), // Space before the avatar
-        // Border around profile picture
-        Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              width: 4.0,
-              color: Color.fromARGB(200, 142, 187, 227),
-            ),
-          ),
-          child: const CircleAvatar(
-            radius: 62.0,
-            backgroundColor: Color.fromARGB(200, 142, 187, 227),
-            child: CircleAvatar(
-              radius: 60.0,
-              backgroundImage: AssetImage(
-                  'lib/assets/person.png'), // Use the correct asset path
-              backgroundColor:
-                  Colors.grey, // Fallback color if image fails to load
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }

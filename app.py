@@ -2,7 +2,7 @@ import json
 from pydantic import BaseModel
 from typing import List
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Body, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 
 app = FastAPI()
 
@@ -28,9 +28,9 @@ class Building(BaseModel):
 
 class Report(BaseModel):
     reportId: str
-    building: Optional[str]  #  optinal to Allow None
-    floor: Optional[str]    
-    classroomNo: Optional[str]  
+    building: Optional[str]  # Allow None
+    floor: Optional[str]     # Allow None
+    classroomNo: Optional[str]  # Allow None
     date: str
     issueType: str
     problemDesc: str
@@ -48,13 +48,13 @@ class MaintenanceStaff(BaseModel):
 
 class Student(BaseModel):
     name: str
-    student_id: int 
+    student_id: int  # should be spelled as 'student_id' to match the JSON key
     major: str
     college: str
-    email: str  
+    email: str  # should match the JSON key
     phoneNo: str
-    password: str  
-    
+    password: str  # ensure this matches the JSON key
+
 class FacultyMember(BaseModel):
     name: str
     phone: str
@@ -89,7 +89,6 @@ def get_classrooms():
         return building_data.get("classrooms", [])
     except Exception as e:
         return {"error": f"Error reading classroom data: {str(e)}"}
-    
 
 # Simplified Endpoint to update classroom availability or other data
 @app.put("/classrooms/{classroom_no}")
@@ -169,6 +168,8 @@ def add_report(report: Report):
 
 
 # Endpoint to fetch students data
+from fastapi import HTTPException
+
 @app.get("/students", response_model=List[Student])
 def get_students():
     try:
@@ -207,7 +208,6 @@ def get_maintenance_staff():
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Failed to parse maintenance staff data.")
     
-# maintenance login endpoint  
 @app.get("/maintenance/login")
 def login_maintenance_staff(staff_id: str, password: str):
     staff_members = get_maintenance_staff() 
@@ -228,7 +228,20 @@ def get_faculty_members():
         raise HTTPException(status_code=404, detail="Faculty members data file not found.")
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Failed to parse faculty members data.")
-        
+    
+# Faculty login endpoint
+@app.get("/faculty", response_model=List[FacultyMember])
+def get_faculty_members():
+    try:
+        with open("Frontend/classwift/faculty_members.json", "r") as file:
+            data = json.load(file)
+            faculty_members = [FacultyMember(**member) for member in data["faculty_members"]]
+            return faculty_members
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Faculty members data file not found.")
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Failed to parse faculty members data.")
+    
 # Faculty login endpoint
 @app.get("/faculty/login")
 def login_faculty_member(faculty_id: int, password: str):
@@ -241,4 +254,5 @@ def login_faculty_member(faculty_id: int, password: str):
                 "name": faculty.name,
                 "id": faculty.id
             }
+
     raise HTTPException(status_code=401, detail="Invalid credentials.")
