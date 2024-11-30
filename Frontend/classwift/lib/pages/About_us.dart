@@ -17,11 +17,10 @@ class _AboutUsPageState extends State<about_us> {
       ),
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/wallpapers (3).png', // Replace with your image path
-              fit: BoxFit.cover, // Ensures the image covers the entire screen
+              'lib/assets/wallpapers (3).png',
+              fit: BoxFit.cover, 
             ),
           ),
           SafeArea(
@@ -32,7 +31,6 @@ class _AboutUsPageState extends State<about_us> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header
                       Center(
                         child: Column(
                           children: [
@@ -59,7 +57,6 @@ class _AboutUsPageState extends State<about_us> {
                         ),
                       ),
                       SizedBox(),
-                      // About Us Content
                       Text(
                         "About us",
                         style: TextStyle(
@@ -76,8 +73,6 @@ class _AboutUsPageState extends State<about_us> {
                         ),
                       ),
                       SizedBox(height: 55),
-
-                      // Mission Statement
                       Text(
                         "Our Mission",
                         style: TextStyle(
@@ -94,8 +89,6 @@ class _AboutUsPageState extends State<about_us> {
                         ),
                       ),
                       SizedBox(height: 55),
-
-                      // Vision Statement
                       Text(
                         "Our Vision",
                         style: TextStyle(

@@ -19,7 +19,7 @@ class _DemoPageState extends State<AvailabilityPage> {
   @override
   void initState() {
     super.initState();
-    // Use the ApiService to fetch classroom data
+    // Using the ApiService to fetch classroom data
     futureBuilding = apiService.fetchBuildingData();
   }
 
@@ -34,7 +34,7 @@ class _DemoPageState extends State<AvailabilityPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('lib/assets/wallpapers (3).png'),
-            fit: BoxFit.fill, // Cover the entire screen
+            fit: BoxFit.fill,
           ),
         ),
         child: FutureBuilder<Building>(
@@ -52,20 +52,11 @@ class _DemoPageState extends State<AvailabilityPage> {
 
               return Padding(
                 padding: const EdgeInsets.all(
-                    16.0), // Padding around the entire content
+                    16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Center(
-                    //   child: Text(
-                    //     'Building 11',
-                    //     style: TextStyle(
-                    //       fontSize: 30,
-                    //       fontWeight: FontWeight.bold,
-                    //       color: Colors.black,
-                    //     ),
-                    //   ),
-                    // ),
+
                     const SizedBox(height: 20),
                     Text(
                       'Available Classrooms in building 11',
@@ -76,14 +67,13 @@ class _DemoPageState extends State<AvailabilityPage> {
                     ),
                     const SizedBox(height: 30),
                     Expanded(
-                      // This makes the GridView take the remaining space
                       child: GridView.builder(
                         physics:
-                            const BouncingScrollPhysics(), // Give it a nice bounce effect
+                            const BouncingScrollPhysics(), // Give it a nice bounce effect :)
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount:
-                              2, // Adjust the number of columns based on available space
+                              2, 
                           crossAxisSpacing: 12.0,
                           mainAxisSpacing: 12.0,
                         ),
@@ -110,8 +100,8 @@ class _DemoPageState extends State<AvailabilityPage> {
         : const Color(0xFFD0F0C0);
 
     return Container(
-        width: 160, // Fixed width
-        height: 180, // Fixed height
+        width: 160,
+        height: 180,
         child: Card(
             elevation: 2,
             shape: RoundedRectangleBorder(
@@ -119,7 +109,7 @@ class _DemoPageState extends State<AvailabilityPage> {
             ),
             color: color.withOpacity(0.8),
             child: Padding(
-                padding: const EdgeInsets.all(16.0), // Padding inside the card
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -140,7 +130,7 @@ class _DemoPageState extends State<AvailabilityPage> {
                         ),
                       ),
                       const SizedBox(
-                          height: 12), // Space between label and title
+                          height: 12),
                       Text(
                         'Classroom No: ${classroom.classroomNo}',
                         style: const TextStyle(
@@ -150,7 +140,7 @@ class _DemoPageState extends State<AvailabilityPage> {
                         ),
                       ),
                       const SizedBox(
-                          height: 10), // Space between title and details
+                          height: 10),
                       Padding(
                         padding: const EdgeInsets.all(4.0),
                         child: Row(

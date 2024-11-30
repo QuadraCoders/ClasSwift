@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 
 class ContactUsPage extends StatefulWidget {
@@ -19,11 +17,10 @@ class _ContactUsPageState extends State<ContactUsPage> {
       ),
       body: Stack(
         children: [
-          // Background Image
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/wallpapers (5).png', // Replace with your image path
-              fit: BoxFit.cover, // Ensures the image covers the entire screen
+              'lib/assets/wallpapers (5).png',
+              fit: BoxFit.cover, 
             ),
           ),
           SafeArea(
@@ -34,7 +31,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Header
                       Center(
                         child: Column(
                           children: [
@@ -60,24 +56,14 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           ],
                         ),
                       ),
-
-                      // First Name
                       _buildTextField("First Name", "First name"),
                       SizedBox(height: 20),
-
-                      // Last Name
                       _buildTextField("Last Name", "Last name"),
                       SizedBox(height: 20),
-
-                      // Email
                       _buildTextField("Email", "Email"),
                       SizedBox(height: 20),
-
-                      // Phone Number
                       _buildTextField("Phone Number", "Phone number"),
                       SizedBox(height: 20),
-
-                      // Message
                       Text(
                         "Message",
                         style: TextStyle(
@@ -99,28 +85,24 @@ class _ContactUsPageState extends State<ContactUsPage> {
                         ),
                       ),
                       SizedBox(height: 30),
-
-                      // Send Message Button
-
                       Center(
                         child: SizedBox(
                           width: double
-                              .infinity, // Makes the button take the full width
+                              .infinity, 
                           child: ElevatedButton(
                             onPressed: () {
-                              // Add your action here
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text("Message Sent!")),
                               );
                             },
                             style: ElevatedButton.styleFrom(
                               padding: EdgeInsets.symmetric(
-                                  vertical: 16), // Matches text field height
+                                  vertical: 16),
                               backgroundColor:
-                                  Colors.black, // Customize button color
+                                  Colors.black,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
-                                    8), // Matches text field corners
+                                    8), 
                               ),
                             ),
                             child: Text(
@@ -131,14 +113,12 @@ class _ContactUsPageState extends State<ContactUsPage> {
                           ),
                         ),
                       ),
-
-                      //call us
                       SizedBox(
                         height: 100,
                       ),
                       Padding(
                         padding: const EdgeInsets.all(
-                            16.0), // Adjust padding for spacing
+                            16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -156,7 +136,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey[
-                                    600], // Light color for secondary text
+                                    600],
                               ),
                             ),
                             SizedBox(height: 12),
@@ -185,7 +165,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(
-                            16.0), // Adjust padding for spacing
+                            16.0), 
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -227,8 +207,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
       ),
     );
   }
-
-  // Helper method for text fields
+  
   Widget _buildTextField(String label, String hint) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

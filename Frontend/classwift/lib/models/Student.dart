@@ -28,4 +28,6 @@ class Student {
             password: json['password'],
         );
     }
+
+  get profilePictureUrl => null;
 }

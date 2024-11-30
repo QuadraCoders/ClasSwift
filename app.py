@@ -140,21 +140,6 @@ def get_reports():
     except Exception as e:
         return {"error": f"An unexpected error occurred: {str(e)}"}
 
-# Endpoint to add a report
-# @app.post("/reports")
-# def add_report(report: Report):
-#     try:
-#         with open("Frontend/classwift/reports.json", "r") as file:
-#             reports_file_data = json.load(file)
-#         reports = reports_file_data.get("reports", [])
-#         reports.append(report.dict())
-#         with open("Frontend/classwift/reports.json", "w") as file:
-#             json.dump({"reports": reports}, file, indent=4)
-#         return {"message": "Report added successfully!"}
-#     except FileNotFoundError:
-#         return {"error": "Reports data file not found. Please check 'reports.json'."}
-#     except json.JSONDecodeError:
-#         return {"error": "Failed to parse 'reports.json'. Check the file structure."}
 @app.post("/reports")
 def add_report(report: Report):
     print(f"Received report data: {report.dict()}")  # Add this line to check what the backend is receiving

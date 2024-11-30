@@ -1,6 +1,5 @@
-import 'package:classwift/pages/NavigationBarScreen.dart';
 import 'package:flutter/material.dart';
-import 'student_view.dart'; // Ensure to import the HomePage
+import 'student_view.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -8,32 +7,30 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String selectedLanguage = 'English'; // Default selected language
+  String selectedLanguage = 'English';
   bool showPersonalPic = false;
   bool showID = false;
   bool isDarkMode = false;
   bool reportsStatus = false;
   bool eventsAnnouncements = false;
-  bool isDataUsageExpanded = false; // State for Data Usage expansion
-  bool isDataPrivacyExpanded = false; // State for Data Privacy expansion
+  bool isDataUsageExpanded = false; 
+  bool isDataPrivacyExpanded = false; 
 
-  // Define pastel colors
-  final Color pastelYellow = Color(0xFFFFEBA0); // Pastel yellow color
+  final Color pastelYellow = Color(0xFFFFEBA0); 
   final Color pastelDarkBlue =
-      Color.fromARGB(255, 87, 123, 232); // Pastel dark blue for moon
+      Color.fromARGB(255, 87, 123, 232); 
   final Color darkSunColor =
-      Color.fromARGB(255, 255, 214, 32); // Darker pastel yellow for sun
+      Color.fromARGB(255, 255, 214, 32);
   final Color policyIconColor =
-      Color.fromARGB(255, 88, 200, 163); // Policy icon color
+      Color.fromARGB(255, 88, 200, 163);
 
-  // Define dark grey color for inactive switch
   final Color darkGrey = Color.fromARGB(255, 122, 120, 120);
 
   // Language options
   final Map<String, String> languages = {
-    'ع': 'Arabic', // Arabic
-    'E': 'English', // English
-    '中': 'Chinese', // Chinese
+    'ع': 'Arabic',
+    'E': 'English', 
+    '中': 'Chinese', 
   };
 
   @override
@@ -59,12 +56,9 @@ class _SettingsPageState extends State<SettingsPage> {
         child: ListView(
           padding: EdgeInsets.symmetric(vertical: 20.0),
           children: [
-            // General Section: Language & Theme
             _buildGroupLabel('General'),
             _buildLanguageDropdown(),
             _buildDarkModeSwitch(),
-
-            // Display Section: ID & Picture
             _buildGroupLabel('Display'),
             _buildSwitchListTile(
               title: 'Show Personal Picture',
@@ -84,8 +78,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 });
               },
             ),
-
-            // Manage Notifications Section
             _buildGroupLabel('Manage Notifications'),
             _buildSwitchListTile(
               title: 'Reports Status',
@@ -106,7 +98,6 @@ class _SettingsPageState extends State<SettingsPage> {
               },
             ),
 
-            // Policies Section
             _buildGroupLabel('Policies'),
             _buildExpandablePolicyTile(
               title: 'Data Usage',
@@ -117,7 +108,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 });
               },
               content: 'عندك ملفات جميلة',
-              icon: Icons.storage, // Example icon
+              icon: Icons.storage, 
             ),
             _buildExpandablePolicyTile(
               title: 'Data Privacy',
@@ -128,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 });
               },
               content: 'لا خوف عليكم كلاسويفت لديكم',
-              icon: Icons.privacy_tip, // Example icon
+              icon: Icons.privacy_tip,
             ),
           ],
         ),
@@ -185,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(title, style: TextStyle(fontSize: 18)),
         trailing: Switch(
           value: value,
-          onChanged: onChanged, // Directly pass the onChanged function
+          onChanged: onChanged, 
           activeTrackColor: Color(0xFF81B2DD),
           activeColor: Colors.white,
           inactiveThumbColor: darkGrey,
@@ -280,7 +271,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return BoxDecoration(
       color: Colors.white.withOpacity(0.8),
       borderRadius: BorderRadius.circular(10),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
           color: Colors.black26,
           blurRadius: 8,
