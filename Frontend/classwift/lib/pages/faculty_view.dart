@@ -26,7 +26,8 @@ import 'package:classwift/models/Report.dart';
 import 'package:classwift/models/building.dart';
 
 class FacultyView extends StatefulWidget {
-  const FacultyView({super.key});
+  final int? userId;
+  const FacultyView({Key? key, this.userId}) : super(key: key);
 
   @override
   State<FacultyView> createState() => _HomePageState();
@@ -35,8 +36,11 @@ class FacultyView extends StatefulWidget {
 class _HomePageState extends State<FacultyView> {
   List<Report> reports = [];
   bool isLoading = true;
-  final ApiService _apiService = ApiService();
-  List screens = [const FacultyView(), ProfilePage()];
+  final ApiService _apiService = ApiService(); // Initialize ApiService
+  List<Widget> screens = [
+    FacultyView(userId: 1),
+    ProfilePage()
+  ]; // Example usage
   int currentIndex = 0;
 
   @override
@@ -74,7 +78,6 @@ class _HomePageState extends State<FacultyView> {
             currentIndex = value;
           });
           if (currentIndex == 1) {
-            // Navigate to ProfilePage when profile icon is tapped
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => FacultyProfile()),
@@ -216,7 +219,7 @@ class _HomePageState extends State<FacultyView> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                           Text(
-                            'Peter B. Parker',
+                            'Salma Aldawsary',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 24),
                           )
@@ -249,7 +252,7 @@ class _HomePageState extends State<FacultyView> {
                               ],
                             ),
                             SizedBox(
-                              width: 50,
+                              width: 15,
                             ),
                             // Picture
                             Image.asset(
@@ -305,12 +308,12 @@ class _HomePageState extends State<FacultyView> {
                             pageName: AlternativePage(
                                 title: 'View alternative classes'),
                           ),
-                          // ServicesCard(
-                          //   serviceName: 'Report an issue',
-                          //   iconImagePath: 'lib/assets/file-edit.png',
-                          //   pageTitle: 'Reports',
-                          //   pageName: ReportPage(),
-                          // ),
+                          ServicesCard(
+                            serviceName: 'Report an issue',
+                            iconImagePath: 'lib/assets/file-edit.png',
+                            pageTitle: 'Reports',
+                            pageName: ReportPage(userId: widget.userId ?? 0),
+                          ),
                           ServicesCard(
                             serviceName: 'History',
                             iconImagePath: 'lib/assets/time-past.png',
@@ -322,32 +325,28 @@ class _HomePageState extends State<FacultyView> {
                     ),
                   ),
 
-                  SizedBox(height: 25),
-
                   // Events List Title
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Current Selected Class',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        Text(
-                          '',
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 25),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Text(
+                  //         'Current Selected Class',
+                  //         style: TextStyle(
+                  //           fontWeight: FontWeight.bold,
+                  //           fontSize: 20,
+                  //         ),
+                  //       ),
+                  //       Text(
+                  //         '',
+                  //         style: TextStyle(
+                  //           fontSize: 14,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
 
                   // Horizontal ListView for Events
                   Padding(

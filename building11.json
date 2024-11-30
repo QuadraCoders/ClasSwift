@@ -81,26 +81,26 @@
         {
             "classroomNo": 109,
             "floor": 1,
-            "capacity": 40,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "50 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 110,
             "floor": 1,
-            "capacity": 25,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "80 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 111,
             "floor": 1,
-            "capacity": 28,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "50 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 112,
@@ -121,10 +121,10 @@
         {
             "classroomNo": 114,
             "floor": 1,
-            "capacity": 35,
-            "isAvailable": true,
+            "capacity": 30,
+            "isAvailable": false,
             "isALab": false,
-            "duration": "80 mins"
+            "duration": "1hr"
         },
         {
             "classroomNo": 115,

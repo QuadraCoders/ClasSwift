@@ -79,7 +79,7 @@ class _maintenace_profile extends State<maintenace_profile> {
                   const SizedBox(
                       height: 20.0), // Space between picture and name
                   const Text(
-                    'Peter parker',
+                    'Jamila Saud',
                     textAlign: TextAlign.center, // Center the text
                     style: TextStyle(
                       fontSize: 28.0,
@@ -91,7 +91,7 @@ class _maintenace_profile extends State<maintenace_profile> {
                   const SizedBox(
                       height: 10.0), // Space between name and additional info
                   const Text(
-                    'Software Engineering',
+                    'Maintenace',
                     textAlign: TextAlign.center, // Center the text
                     style: TextStyle(
                       fontSize: 16.0,
@@ -187,11 +187,10 @@ class ViewProfilePage extends StatefulWidget {
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
   // Sample retrieved data
-  String userName = "Peter Parker";
-  String StudentID = "2211116";
-  String major = "Software Engineering";
-  String collage = "Computer Science and Engineering";
-  String email = "2211116@uj.edu.sa";
+  String userName = "Jamila Saud";
+  String StudentID = "MS001";
+  String collage = "Maintenance";
+  String email = "J.Saud@example.com";
   String phoneNumber = "+966 573 829 3822";
 
   @override
@@ -224,7 +223,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                       Column(
                         children: [
                           const Text(
-                            'Peter parker',
+                            'Jamila Saud',
                             textAlign: TextAlign.center, // Center the text
                             style: TextStyle(
                               fontSize: 28.0,
@@ -233,7 +232,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                             ),
                           ),
                           const Text(
-                            'Software Engineering',
+                            'Maintenance',
                             textAlign: TextAlign.center, // Center the text
                             style: TextStyle(
                               fontSize: 16.0,
@@ -250,8 +249,6 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                   _buildTextField('Name', 'Enter your name', userName),
                   SizedBox(height: 16),
                   _buildTextField('ID', 'Enter your email', StudentID),
-                  SizedBox(height: 16),
-                  _buildTextField('Major', 'Enter your phone number', major),
                   SizedBox(height: 16),
                   _buildTextField('Department', 'Enter your collage', collage),
                   SizedBox(height: 16),

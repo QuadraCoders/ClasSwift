@@ -6,7 +6,7 @@ import 'package:classwift/pages/student_view.dart';
 import 'package:flutter/material.dart';
 
 class ReportPage extends StatefulWidget {
-    final int userId; // Add userId as a required parameter
+  final int userId; // Add userId as a required parameter
 
   const ReportPage({super.key, required this.userId});
 
@@ -60,7 +60,6 @@ class _ReportPageState extends State<ReportPage> {
           .toList();
     });
   }
-
 
   Future<void> _saveReport() async {
     // Check for null or empty fields
@@ -122,12 +121,9 @@ class _ReportPageState extends State<ReportPage> {
                   : 'There was an error submitting your report. Please try again.'),
           isSuccess: isSuccess,
           onClose: () {
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(); // Closes the dialog
             if (isSuccess) {
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const StudentView()),
-                (route) => false,
-              );
+              Navigator.of(context).pop(); // Returns to the previous page
             }
           },
         );

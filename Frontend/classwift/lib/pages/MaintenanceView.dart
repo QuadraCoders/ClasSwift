@@ -356,7 +356,7 @@ class _Maintenanceview extends State<Maintenanceview> {
                                       fontSize: 18),
                                 ),
                                 Text(
-                                  'Hulk',
+                                  'Jamila Saud',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 24),
@@ -388,7 +388,7 @@ class _Maintenanceview extends State<Maintenanceview> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(width: 50),
+                                  SizedBox(width: 15),
                                   Image.asset(
                                     'lib/assets/college class-amico.png',
                                     height: 120,

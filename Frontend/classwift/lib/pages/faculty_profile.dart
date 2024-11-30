@@ -2,7 +2,6 @@ import 'package:classwift/pages/MaintenanceView.dart';
 import 'package:classwift/pages/faculty_view.dart';
 import 'package:flutter/material.dart';
 
-
 class FacultyProfile extends StatefulWidget {
   const FacultyProfile({super.key});
 
@@ -14,7 +13,7 @@ class _FacultyProfile extends State<FacultyProfile> {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    List screens = [ FacultyProfile()];
+    List screens = [FacultyProfile()];
     int currentIndex = 1;
 
     return Scaffold(
@@ -81,7 +80,7 @@ class _FacultyProfile extends State<FacultyProfile> {
                   const SizedBox(
                       height: 20.0), // Space between picture and name
                   const Text(
-                    'Peter parker',
+                    'Salma Aldawsary',
                     textAlign: TextAlign.center, // Center the text
                     style: TextStyle(
                       fontSize: 28.0,
@@ -189,11 +188,11 @@ class ViewProfilePage extends StatefulWidget {
 
 class _ViewProfilePageState extends State<ViewProfilePage> {
   // Sample retrieved data
-  String userName = "Peter Parker";
-  String StudentID = "2211116";
+  String userName = "Salma Aldawsary";
+  String StudentID = "1003";
   String major = "Software Engineering";
   String collage = "Computer Science and Engineering";
-  String email = "2211116@uj.edu.sa";
+  String email = "1003@uj.edu.sa";
   String phoneNumber = "+966 573 829 3822";
 
   @override
@@ -226,7 +225,7 @@ class _ViewProfilePageState extends State<ViewProfilePage> {
                       Column(
                         children: [
                           const Text(
-                            'Peter parker',
+                            'Salma Aldawsary',
                             textAlign: TextAlign.center, // Center the text
                             style: TextStyle(
                               fontSize: 28.0,
